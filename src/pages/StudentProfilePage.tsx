@@ -440,7 +440,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const [editEmail, setEditEmail] = useState(student.email || '');
   const [editUsername, setEditUsername] = useState(student.username || '');
   
-  // حالات البحث للتخصص والجامعة
   const [majorSearch, setMajorSearch] = useState('');
   const [showMajorDropdown, setShowMajorDropdown] = useState(false);
 
@@ -461,7 +460,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const canSeeEmail = isMe || student.privacy.emailVisibility === 'everyone' || (student.privacy.emailVisibility === 'same-university' && student.university === currentUser.university);
   const canSeePhone = isMe || student.privacy.phoneVisible;
 
-  // إغلاق القوائم عند النقر خارجها
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (majorRef.current && !majorRef.current.contains(event.target as Node)) {
@@ -525,7 +523,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   return (
     <PageShell>
       {!isMe && <BackButton label="Back" />}
-      <div className="mx-auto max-w-2xl px-4 py-6">
+      <div className="mx-auto max-w-2xl px-4 py-6 space-y-6">
         <div className="rounded-3xl bg-white p-6 shadow-card space-y-6">
           
           <div className="flex flex-col items-center border-b border-cream-200 pb-6 relative">
@@ -867,6 +865,12 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           )}
 
         </div>
+
+        {/* تذييل الصفحة (Footer) بالشكل المطلوب */}
+        <footer className="text-center py-4 text-xs font-semibold text-navy-400">
+          2026 © — Created by PEERORA Team
+        </footer>
+
       </div>
     </PageShell>
   );
