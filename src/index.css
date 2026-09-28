@@ -32,7 +32,7 @@
 }
 
 @layer utilities {
-  /* كلاس جاهز لتطبيق خط Starborn على أي نص */
+  /* كلاس جاهز لتطبيق خط Starborn على أي نص عند الرغبة */
   .font-starborn {
     font-family: 'Starborn', sans-serif;
   }
