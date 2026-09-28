@@ -148,8 +148,8 @@ export function HomePage() {
           <AboutUsSection />
         </div>
 
-        {/* 🌟 حقوق الموقع وتفاعل البريد الإلكتروني (محاذاة لليمين) */}
-        <div className="mt-8 mb-4 text-right px-4 space-y-1">
+        {/* 🌟 حقوق الموقع وتفاعل البريد الإلكتروني (مرتبة ومحاذية لليمين) */}
+        <div className="mt-12 mb-8 text-right max-w-7xl mx-auto px-4 space-y-1">
           <p className="text-xs sm:text-sm font-semibold text-navy-400">
             © 2026 — Created by PEERORA Team
           </p>
