@@ -1,15 +1,14 @@
 import { useApp } from '@/context/AppContext';
 import { PageShell, BackButton } from '@/components/Nav';
 import { PillButton } from '@/components/PillButton';
-import { Mail, Phone, GraduationCap, Shield, Award, Star, Edit3, Save, X, LogOut, Camera, Plus, BookOpen, Heart, Sparkles } from 'lucide-react';
-import { useState } from 'react';
+import { Mail, Phone, GraduationCap, Shield, Award, Star, Edit3, Save, X, LogOut, Plus, BookOpen, Heart, Sparkles, Search } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 import { UniversityLogo } from '@/components/UniversityLogo';
 import { AcademicLevelIconByValue } from '@/components/AcademicLevelIcons';
 import type { Post, ConversationDuration } from '@/data/types';
 
-// القائمة الشاملة والكاملة للجامعات المحلية والعالمية
+// القائمة الشاملة للجامعات
 const COMPREHENSIVE_UNIVERSITIES = [
-  // السعودية
   'King Saud University (KSU)',
   'Princess Nourah bint Abdulrahman University (PNU)',
   'Imam Mohammad Ibn Saud Islamic University (IMSIU)',
@@ -46,7 +45,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'Jouf University',
   'Qassim University',
   'King Abdullah University of Science and Technology (KAUST)',
-  // أمريكا
   'Massachusetts Institute of Technology',
   'Stanford University',
   'Harvard University',
@@ -67,7 +65,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'Georgia Institute of Technology',
   'University of Illinois Urbana-Champaign',
   'University of Southern California',
-  // بريطانيا
   'University of Oxford',
   'University of Cambridge',
   'Imperial College London',
@@ -83,7 +80,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'University of Southampton',
   'University of Nottingham',
   'University of Sheffield',
-  // كندا
   'University of Toronto',
   'University of British Columbia',
   'McGill University',
@@ -94,7 +90,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'Western University',
   "Queen's University",
   'University of Ottawa',
-  // أستراليا
   'University of Melbourne',
   'University of Sydney',
   'Australian National University',
@@ -105,7 +100,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'University of Western Australia',
   'University of Technology Sydney',
   'RMIT University',
-  // اليابان
   'University of Tokyo',
   'Kyoto University',
   'Osaka University',
@@ -114,7 +108,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'Tokyo Institute of Technology',
   'Keio University',
   'Waseda University',
-  // الصين
   'Tsinghua University',
   'Peking University',
   'Fudan University',
@@ -123,7 +116,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'University of Science and Technology of China',
   'Nanjing University',
   'Sun Yat-sen University',
-  // كوريا الجنوبية
   'Seoul National University',
   'KAIST',
   'Yonsei University',
@@ -131,7 +123,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'POSTECH',
   'Sungkyunkwan University',
   'Hanyang University',
-  // ألمانيا
   'Technical University of Munich',
   'Ludwig Maximilian University of Munich',
   'Heidelberg University',
@@ -140,7 +131,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'RWTH Aachen University',
   'University of Freiburg',
   'University of Bonn',
-  // فرنسا
   'PSL University',
   'Sorbonne University',
   'Paris-Saclay University',
@@ -148,24 +138,20 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'École Normale Supérieure',
   'University of Strasbourg',
   'University of Lyon',
-  // هولندا
   'University of Amsterdam',
   'Delft University of Technology',
   'Eindhoven University of Technology',
   'Leiden University',
   'Utrecht University',
   'Erasmus University Rotterdam',
-  // سويسرا
   'ETH Zurich',
   'EPFL',
   'University of Zurich',
   'University of Geneva',
   'University of Lausanne',
-  // سنغافورة
   'National University of Singapore',
   'Nanyang Technological University',
   'Singapore Management University',
-  // الهند
   'Indian Institute of Technology Bombay',
   'Indian Institute of Technology Delhi',
   'Indian Institute of Technology Madras',
@@ -175,18 +161,15 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'University of Delhi',
   'Jawaharlal Nehru University',
   'University of Mumbai',
-  // الإمارات
   'United Arab Emirates University',
   'Khalifa University',
   'American University of Sharjah',
   'University of Sharjah',
   'Zayed University',
   'American University in Dubai',
-  // قطر
   'Qatar University',
   'Hamad Bin Khalifa University',
   'Doha Institute for Graduate Studies',
-  // تركيا
   'Middle East Technical University',
   'Istanbul Technical University',
   'Boğaziçi University',
@@ -194,13 +177,11 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'Hacettepe University',
   'Koç University',
   'Bilkent University',
-  // البرازيل
   'University of São Paulo',
   'University of Campinas',
   'Federal University of Rio de Janeiro',
   'Federal University of Minas Gerais',
   'University of Brasília',
-  // جنوب إفريقيا
   'University of Cape Town',
   'University of the Witwatersrand',
   'Stellenbosch University',
@@ -208,7 +189,7 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'University of Pretoria'
 ];
 
-// القائمة الشاملة والكاملة للتخصصات الأكاديمية
+// القائمة الشاملة للتخصصات
 const COMPREHENSIVE_MAJORS = [
   'Medicine and Surgery',
   'Doctor of Pharmacy (PharmD)',
@@ -284,7 +265,6 @@ const COMPREHENSIVE_MAJORS = [
   'Food Science & Technology',
   'Marine Sciences',
   'Aviation Management',
-  // تخصصات تقنية إضافية دقيقة
   'Machine Learning',
   'Deep Learning',
   'Data Science',
@@ -438,7 +418,6 @@ const COMPREHENSIVE_MAJORS = [
   'Disaster Management'
 ];
 
-// المستويات الدراسية المطابقة للصورة تماماً مع أيقوناتها
 const ACADEMIC_LEVELS = [
   { label: 'First Year', icon: <Sparkles size={16} className="text-daffodil-500" /> },
   { label: 'Second Year', icon: <BookOpen size={16} className="text-fuchsia-500" /> },
@@ -461,6 +440,16 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const [editEmail, setEditEmail] = useState(student.email || '');
   const [editUsername, setEditUsername] = useState(student.username || '');
   
+  // حالات البحث للتخصص والجامعة
+  const [majorSearch, setMajorSearch] = useState('');
+  const [showMajorDropdown, setShowMajorDropdown] = useState(false);
+
+  const [universitySearch, setUniversitySearch] = useState('');
+  const [showUniversityDropdown, setShowUniversityDropdown] = useState(false);
+
+  const majorRef = useRef<HTMLDivElement>(null);
+  const universityRef = useRef<HTMLDivElement>(null);
+
   const [skillsList, setSkillsList] = useState<string[]>(student.skills || []);
   const [newSkillInput, setNewSkillInput] = useState('');
 
@@ -471,6 +460,28 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
 
   const canSeeEmail = isMe || student.privacy.emailVisibility === 'everyone' || (student.privacy.emailVisibility === 'same-university' && student.university === currentUser.university);
   const canSeePhone = isMe || student.privacy.phoneVisible;
+
+  // إغلاق القوائم عند النقر خارجها
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (majorRef.current && !majorRef.current.contains(event.target as Node)) {
+        setShowMajorDropdown(false);
+      }
+      if (universityRef.current && !universityRef.current.contains(event.target as Node)) {
+        setShowUniversityDropdown(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const filteredMajors = COMPREHENSIVE_MAJORS.filter(m => 
+    m.toLowerCase().includes(majorSearch.toLowerCase())
+  );
+
+  const filteredUniversities = COMPREHENSIVE_UNIVERSITIES.filter(u => 
+    u.toLowerCase().includes(universitySearch.toLowerCase())
+  );
 
   const handleAddSkill = () => {
     if (newSkillInput.trim() && !skillsList.includes(newSkillInput.trim())) {
@@ -537,7 +548,11 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                   </>
                 ) : (
                   <button
-                    onClick={() => setIsEditing(true)}
+                    onClick={() => {
+                      setMajorSearch(editMajor);
+                      setUniversitySearch(editUniversity);
+                      setIsEditing(true);
+                    }}
                     className="flex items-center gap-1.5 rounded-pill bg-lavender-100 px-4 py-2 text-xs font-bold text-navy-600 shadow-sm transition hover:bg-lavender-200"
                   >
                     <Edit3 size={14} /> Edit Profile
@@ -564,19 +579,48 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           </div>
 
           <div className="space-y-4">
-            {/* Major */}
-            <div>
+            
+            {/* Major with Searchable Dropdown */}
+            <div className="relative" ref={majorRef}>
               <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Major</label>
               {isEditing ? (
-                <select
-                  value={editMajor}
-                  onChange={(e) => setEditMajor(e.target.value)}
-                  className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
-                >
-                  {COMPREHENSIVE_MAJORS.map((m) => (
-                    <option key={m} value={m}>{m}</option>
-                  ))}
-                </select>
+                <div>
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      value={majorSearch}
+                      onChange={(e) => {
+                        setMajorSearch(e.target.value);
+                        setShowMajorDropdown(true);
+                      }}
+                      onFocus={() => setShowMajorDropdown(true)}
+                      className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 pl-10 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
+                      placeholder="Search major..."
+                    />
+                    <Search size={16} className="absolute left-3 text-navy-400" />
+                  </div>
+                  {showMajorDropdown && (
+                    <div className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-2xl border border-cream-300 bg-white shadow-lg">
+                      {filteredMajors.length > 0 ? (
+                        filteredMajors.map((m) => (
+                          <div
+                            key={m}
+                            onClick={() => {
+                              setEditMajor(m);
+                              setMajorSearch(m);
+                              setShowMajorDropdown(false);
+                            }}
+                            className="cursor-pointer px-4 py-2.5 text-sm font-semibold text-navy-500 hover:bg-cream-100 transition"
+                          >
+                            {m}
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-sm text-navy-400 italic">No majors found</div>
+                      )}
+                    </div>
+                  )}
+                </div>
               ) : (
                 <div className="rounded-2xl border border-cream-200 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 flex items-center gap-2">
                   <GraduationCap size={16} className="text-navy-400" />
@@ -585,19 +629,48 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               )}
             </div>
 
-            {/* University */}
-            <div>
+            {/* University with Searchable Dropdown */}
+            <div className="relative" ref={universityRef}>
               <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">University</label>
               {isEditing ? (
-                <select
-                  value={editUniversity}
-                  onChange={(e) => setEditUniversity(e.target.value)}
-                  className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
-                >
-                  {COMPREHENSIVE_UNIVERSITIES.map((u) => (
-                    <option key={u} value={u}>{u}</option>
-                  ))}
-                </select>
+                <div>
+                  <div className="relative flex items-center">
+                    <input
+                      type="text"
+                      value={universitySearch}
+                      onChange={(e) => {
+                        setUniversitySearch(e.target.value);
+                        setShowUniversityDropdown(true);
+                      }}
+                      onFocus={() => setShowUniversityDropdown(true)}
+                      className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 pl-10 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
+                      placeholder="Search university..."
+                    />
+                    <Search size={16} className="absolute left-3 text-navy-400" />
+                  </div>
+                  {showUniversityDropdown && (
+                    <div className="absolute z-20 mt-1 max-h-60 w-full overflow-y-auto rounded-2xl border border-cream-300 bg-white shadow-lg">
+                      {filteredUniversities.length > 0 ? (
+                        filteredUniversities.map((u) => (
+                          <div
+                            key={u}
+                            onClick={() => {
+                              setEditUniversity(u);
+                              setUniversitySearch(u);
+                              setShowUniversityDropdown(false);
+                            }}
+                            className="cursor-pointer px-4 py-2.5 text-sm font-semibold text-navy-500 hover:bg-cream-100 transition flex items-center gap-2"
+                          >
+                            <UniversityLogo name={u} size={18} />
+                            <span>{u}</span>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="px-4 py-3 text-sm text-navy-400 italic">No universities found</div>
+                      )}
+                    </div>
+                  )}
+                </div>
               ) : (
                 <div className="rounded-2xl border border-cream-200 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 flex items-center gap-2">
                   <UniversityLogo name={student.university} size={20} />
