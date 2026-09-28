@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Plus Jakarta Sans"', '"Cairo"', '"Noto Nastaliq Urdu"', 'system-ui', 'sans-serif'],
-        body: ['"Plus Jakarta Sans"', '"Cairo"', '"Noto Nastaliq Urdu"', 'system-ui', 'sans-serif'],
+        display: ['"Cal Sans"', '"Plus Jakarta Sans"', '"Cairo"', 'sans-serif'],
+        body: ['"Belanosima"', '"Plus Jakarta Sans"', '"Cairo"', 'sans-serif'],
         arabic: ['"Cairo"', '"Tajawal"', 'sans-serif'],
       },
       colors: {
@@ -24,7 +24,7 @@ export default {
           800: '#0A1124',
         },
         lavender: {
-          100: '#F3E8FF', // أضفنا درجة 100 للخلفيات الهادئة والهوفر
+          100: '#F3E8FF',
           200: '#E8E4F8',
           300: '#D4CDF0',
           400: '#B3A8E8',
@@ -103,8 +103,8 @@ export default {
       },
       borderRadius: {
         pill: '9999px',
-        btn: '0.75rem',  // تم توحيدها لتعطي حواف دائرية ناعمة ومتناسقة للأزرار
-        card: '1rem',    // حواف دائرية للبطاقات
+        btn: '0.75rem',
+        card: '1rem',
         'card-lg': '1.25rem',
       },
       boxShadow: {
