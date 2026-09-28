@@ -5,7 +5,6 @@ import { Mail, Phone, GraduationCap, Shield, Award, Star, Edit3, Save, X, LogOut
 import { useState, useRef, useEffect } from 'react';
 import { UniversityLogo } from '@/components/UniversityLogo';
 import { AcademicLevelIconByValue } from '@/components/AcademicLevelIcons';
-import type { Post, ConversationDuration } from '@/data/types';
 
 // القائمة الشاملة للجامعات
 const COMPREHENSIVE_UNIVERSITIES = [
@@ -440,10 +439,11 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const [editEmail, setEditEmail] = useState(student.email || '');
   const [editUsername, setEditUsername] = useState(student.username || '');
   
-  const [majorSearch, setMajorSearch] = useState('');
+  // حالات البحث المباشر
+  const [majorSearch, setMajorSearch] = useState(student.major || '');
   const [showMajorDropdown, setShowMajorDropdown] = useState(false);
 
-  const [universitySearch, setUniversitySearch] = useState('');
+  const [universitySearch, setUniversitySearch] = useState(student.university || '');
   const [showUniversityDropdown, setShowUniversityDropdown] = useState(false);
 
   const majorRef = useRef<HTMLDivElement>(null);
@@ -507,8 +507,8 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     if (updateProfile) {
       updateProfile({
         name: editName,
-        major: editMajor,
-        university: editUniversity,
+        major: majorSearch || editMajor,
+        university: universitySearch || editUniversity,
         level: editLevel,
         phone: editPhone,
         email: editEmail,
@@ -547,8 +547,8 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                 ) : (
                   <button
                     onClick={() => {
-                      setMajorSearch(editMajor);
-                      setUniversitySearch(editUniversity);
+                      setMajorSearch(student.major || '');
+                      setUniversitySearch(student.university || '');
                       setIsEditing(true);
                     }}
                     className="flex items-center gap-1.5 rounded-pill bg-lavender-100 px-4 py-2 text-xs font-bold text-navy-600 shadow-sm transition hover:bg-lavender-200"
@@ -731,7 +731,13 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               ) : (
                 <div className="rounded-2xl border border-cream-200 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 flex items-center gap-2">
                   <Mail size={16} className="text-navy-400" />
-                  <span>{canSeeEmail ? student.email : 'Hidden by privacy settings'}</span>
+                  {canSeeEmail ? (
+                    <a href={`mailto:${student.email}`} className="text-navy-600 hover:underline">
+                      {student.email}
+                    </a>
+                  ) : (
+                    <span className="text-navy-400/50 italic">Hidden by privacy settings</span>
+                  )}
                 </div>
               )}
             </div>
@@ -865,12 +871,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           )}
 
         </div>
-
-        {/* تذييل الصفحة (Footer) بالشكل المطلوب */}
-        <footer className="text-center py-4 text-xs font-semibold text-navy-400">
-          2026 © — Created by PEERORA Team
-        </footer>
-
       </div>
     </PageShell>
   );
