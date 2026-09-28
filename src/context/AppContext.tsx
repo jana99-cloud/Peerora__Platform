@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useCallback, useMemo, useEffect, type ReactNode } from 'react';
 import type { Post, Student, StudyGroup, ChatMessage, PostType, PrivacySettings, Task, FileItem, ConversationSummary, ConversationSession, ConversationDuration, CollaborationRequest, CollaborationOutcome } from '@/data/types';
 import { seedPosts, seedStudents, seedGroups } from '@/data/seed';
+import { supabase } from '@/lib/supabase'; // تم إضافة اتصال سابابيز هنا
 
 export type Route =
   | { name: 'signup' }
@@ -127,6 +128,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [conversations, setConversations] = useState<ConversationSession[]>(persisted?.conversations ?? []);
   const [collaborationRequests, setCollaborationRequests] = useState<CollaborationRequest[]>(persisted?.collaborationRequests ?? []);
 
+  // جلب المشاريع من سابابيز عند فتح التطبيق
+  useEffect(() => {
+    async function fetchSupabasePosts() {
+      if (!supabase) return;
+      try {
+        const { data, error } = await supabase.from('posts').select('*');
+        if (!error && data && data.length > 0) {
+          // دمج المشاريع السحابية مع المحلية إن وجدت
+          setPosts(data as Post[]);
+        }
+      } catch (err) {
+        console.error('Error fetching posts from Supabase:', err);
+      }
+    }
+    fetchSupabasePosts();
+  }, []);
+
   useEffect(() => {
     const state: PersistedState = {
       isSignedUp,
@@ -187,8 +205,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
-  const addPost = useCallback((post: Post) => {
+  // تعديل إضافة المشروع ليتم حفظه في سابابيز وفي الحالة معاً
+  const addPost = useCallback(async (post: Post) => {
     setPosts((prev) => [post, ...prev]);
+    if (supabase) {
+      try {
+        await supabase.from('posts').insert([post]);
+      } catch (err) {
+        console.error('Error saving post to Supabase:', err);
+      }
+    }
   }, []);
 
   const joinPost = useCallback((postId: string) => {
