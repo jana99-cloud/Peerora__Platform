@@ -148,17 +148,15 @@ export function HomePage() {
           <AboutUsSection />
         </div>
 
-        {/* 🌟 حقوق الموقع وتفاعل البريد الإلكتروني (مرتبة ومحاذية لليمين) */}
-        <div className="mt-12 mb-8 text-right max-w-7xl mx-auto px-4 space-y-1">
-          <p className="text-xs sm:text-sm font-semibold text-navy-400">
-            © 2026 — Created by PEERORA Team
-          </p>
-          <p className="text-xs sm:text-sm font-medium text-navy-400">
+        {/* 🌟 التذييل: التاريخ في اليمين وباقي الكلام منسق في المنتصف */}
+        <div className="mt-8 mb-4 flex justify-between items-center px-2 text-xs sm:text-sm font-semibold text-navy-400">
+          <p>
             Contact:{' '}
             <a href="mailto:Peerora.support@gmail.com" className="hover:underline text-fuchsia-600 font-semibold">
               Peerora.support@gmail.com
             </a>
           </p>
+          <p>© 2026 — Created by PEERORA Team</p>
         </div>
       </main>
     </div>
