@@ -84,9 +84,9 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* العنوان الرئيسي في المنتصف مع تطبيق الخط المميز */}
+            {/* العنوان الرئيسي في المنتصف بالخط الطبيعي */}
             <div className="my-8 text-center md:text-left">
-              <h1 className="font-starborn text-3xl sm:text-5xl font-extrabold text-navy-900 tracking-tight">
+              <h1 className="text-3xl sm:text-5xl font-extrabold text-navy-900 tracking-tight">
                 Available activities
               </h1>
             </div>
