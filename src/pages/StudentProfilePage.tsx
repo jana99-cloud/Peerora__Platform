@@ -1,7 +1,7 @@
 import { useApp } from '@/context/AppContext';
 import { PageShell, BackButton } from '@/components/Nav';
 import { PillButton } from '@/components/PillButton';
-import { Mail, Phone, MapPin, GraduationCap, Shield, MessageSquare, Ban, Flag, BookOpen, Award, Star, Settings, MessagesSquare, Wrench, Edit3, Save, X } from 'lucide-react';
+import { Mail, Phone, MapPin, GraduationCap, Shield, MessageSquare, Ban, Flag, BookOpen, Award, Star, Settings, MessagesSquare, Wrench, Edit3, Save, X, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '@/components/Modal';
 import { ConversationPurposeModal } from '@/components/ConversationPurposeModal';
@@ -10,7 +10,7 @@ import { AcademicLevelIconByValue } from '@/components/AcademicLevelIcons';
 import type { Post, ConversationDuration } from '@/data/types';
 
 export function StudentProfilePage({ studentId }: { studentId: string }) {
-  const { students, currentUser, navigate, blockUser, unblockUser, blockedUserIds, getUniversityActivityPoints, posts, startConversation, updateProfile } = useApp() as any;
+  const { students, currentUser, navigate, blockUser, unblockUser, blockedUserIds, getUniversityActivityPoints, posts, startConversation, updateProfile, logout } = useApp() as any;
   const student = students.find((s: any) => s.id === studentId) ?? currentUser;
   
   const [showReport, setShowReport] = useState(false);
@@ -303,6 +303,18 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                   </PillButton>
                   <PillButton variant="white" className="w-full" onClick={() => navigate({ name: 'find-students' })}>
                     Find Students
+                  </PillButton>
+                  
+                  {/* زر تسجيل الخروج */}
+                  <PillButton 
+                    variant="red" 
+                    className="w-full mt-2" 
+                    onClick={() => {
+                      if (logout) logout();
+                      navigate({ name: 'home' });
+                    }}
+                  >
+                    <LogOut size={16} /> Log Out
                   </PillButton>
                 </div>
               </div>
