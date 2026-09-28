@@ -1,7 +1,7 @@
 import { useApp } from '@/context/AppContext';
 import { PageShell, BackButton } from '@/components/Nav';
 import { PillButton } from '@/components/PillButton';
-import { Mail, Phone, MapPin, GraduationCap, Shield, Award, Star, MessagesSquare, Edit3, Save, X, LogOut, Camera, Plus } from 'lucide-react';
+import { Mail, Phone, MapPin, GraduationCap, Shield, Award, Star, MessagesSquare, Edit3, Save, X, LogOut, Camera, Plus, BookOpen, Heart, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '@/components/Modal';
 import { ConversationPurposeModal } from '@/components/ConversationPurposeModal';
@@ -9,46 +9,34 @@ import { UniversityLogo } from '@/components/UniversityLogo';
 import { AcademicLevelIconByValue } from '@/components/AcademicLevelIcons';
 import type { Post, ConversationDuration } from '@/data/types';
 
-// قائمة واسعة تشمل التخصصات العالمية والمحلية
-const GLOBAL_MAJORS = [
-  'Computer Science',
-  'Software Engineering',
-  'Information Systems',
-  'Cybersecurity',
-  'Artificial Intelligence',
-  'Data Science & Analytics',
-  'Information Technology',
-  'Computer Engineering',
-  'Electrical Engineering',
-  'Mechanical Engineering',
-  'Business Administration',
-  'Medicine & Surgery',
-  'Law'
-];
-
-// قائمة واسعة تشمل الجامعات المحلية والعالمية الكبرى
-const GLOBAL_UNIVERSITIES = [
+// يمكنك لصق التخصصات والجامعات الخاصة بكِ هنا أو إرسالها لي لأقوم بإضافتها فوراً
+const UNIVERSITIES = [
   'Jazan University',
   'King Saud University',
   'King Abdulaziz University',
   'Imam Mohammad Ibn Saud Islamic University',
   'King Fahd University of Petroleum and Minerals',
-  'Princess Nourah bint Abdulrahman University',
-  'Massachusetts Institute of Technology (MIT)',
-  'Stanford University',
-  'Harvard University',
-  'University of Oxford',
-  'University of Cambridge',
-  'Other / International University'
+  'Princess Nourah bint Abdulrahman University'
 ];
 
-const AVAILABLE_LEVELS = [
-  'Freshman',
-  'Sophomore',
-  'Junior',
-  'Senior',
-  'Graduate / Master',
-  'PhD Student'
+const MAJORS = [
+  'Computer Science',
+  'Software Engineering',
+  'Information Systems',
+  'Cybersecurity',
+  'Artificial Intelligence',
+  'Data Analytics',
+  'Computer Engineering & Networks'
+];
+
+// المستويات الدراسية المطابقة للصورة تماماً مع أيقوناتها
+const ACADEMIC_LEVELS = [
+  { label: 'First Year', icon: <Sparkles size={16} className="text-daffodil-500" /> },
+  { label: 'Second Year', icon: <BookOpen size={16} className="text-fuchsia-500" /> },
+  { label: 'Third Year', icon: <Award size={16} className="text-sky-500" /> },
+  { label: 'Fourth Year', icon: <Star size={16} className="text-sage-500" /> },
+  { label: 'Fifth Year', icon: <Heart size={16} className="text-poppy-500" /> },
+  { label: 'Graduate', icon: <GraduationCap size={16} className="text-navy-500" /> }
 ];
 
 export function StudentProfilePage({ studentId }: { studentId: string }) {
@@ -61,7 +49,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const [editName, setEditName] = useState(student.name);
   const [editMajor, setEditMajor] = useState(student.major || 'Computer Science');
   const [editUniversity, setEditUniversity] = useState(student.university || 'Jazan University');
-  const [editLevel, setEditLevel] = useState(student.level || 'Sophomore');
+  const [editLevel, setEditLevel] = useState(student.level || 'Second Year');
   const [editPhone, setEditPhone] = useState(student.phone || '');
   const [editEmail, setEditEmail] = useState(student.email || '');
   const [editUsername, setEditUsername] = useState(student.username || '');
@@ -208,7 +196,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                   onChange={(e) => setEditMajor(e.target.value)}
                   className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
                 >
-                  {GLOBAL_MAJORS.map((m) => (
+                  {MAJORS.map((m) => (
                     <option key={m} value={m}>{m}</option>
                   ))}
                 </select>
@@ -229,7 +217,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                   onChange={(e) => setEditUniversity(e.target.value)}
                   className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
                 >
-                  {GLOBAL_UNIVERSITIES.map((u) => (
+                  {UNIVERSITIES.map((u) => (
                     <option key={u} value={u}>{u}</option>
                   ))}
                 </select>
@@ -250,8 +238,8 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                   onChange={(e) => setEditLevel(e.target.value)}
                   className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
                 >
-                  {AVAILABLE_LEVELS.map((lvl) => (
-                    <option key={lvl} value={lvl}>{lvl}</option>
+                  {ACADEMIC_LEVELS.map((lvl) => (
+                    <option key={lvl.label} value={lvl.label}>{lvl.label}</option>
                   ))}
                 </select>
               ) : (
@@ -262,16 +250,16 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               )}
             </div>
 
-            {/* Phone Number (Supports international numbers) */}
+            {/* Phone Number */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Phone Number (International supported)</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Phone Number</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={editPhone}
                   onChange={(e) => setEditPhone(e.target.value)}
                   className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
-                  placeholder="+1 (555) 000-0000 or +966..."
+                  placeholder="+1 (555) 000-0000"
                 />
               ) : (
                 <div className="rounded-2xl border border-cream-200 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 flex items-center gap-2">
