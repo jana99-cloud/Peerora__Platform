@@ -454,7 +454,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     <AppContext.Provider
       value={{
         route,
-        navigate, مفتاح
+        navigate,
         goBack,
         canGoBack: history.length > 1,
         currentUser,
