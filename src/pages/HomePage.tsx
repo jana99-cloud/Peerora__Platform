@@ -148,10 +148,10 @@ export function HomePage() {
           <AboutUsSection />
         </div>
 
-        {/* 🌟 حقوق الموقع والتفاعل (توسيط في منتصف الصفحة) */}
+        {/* 🌟 حقوق الموقع والتفاعل (توسيط في منتصف الصفحة بالنص المطلوب) */}
         <div className="mt-8 mb-4 text-center px-2 space-y-1">
           <p className="text-xs sm:text-sm font-semibold text-navy-400">
-            © 2026 — Created by PEERORA Team
+            Created by PEERORA Team — 2026©
           </p>
           <p className="text-xs sm:text-sm font-medium text-navy-400">
             Contact:{' '}
