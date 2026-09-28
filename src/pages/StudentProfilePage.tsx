@@ -6,7 +6,6 @@ import { useState, useRef, useEffect } from 'react';
 import { UniversityLogo } from '@/components/UniversityLogo';
 import { AcademicLevelIconByValue } from '@/components/AcademicLevelIcons';
 
-// القائمة الشاملة للجامعات
 const COMPREHENSIVE_UNIVERSITIES = [
   'King Saud University (KSU)',
   'Princess Nourah bint Abdulrahman University (PNU)',
@@ -188,7 +187,6 @@ const COMPREHENSIVE_UNIVERSITIES = [
   'University of Pretoria'
 ];
 
-// القائمة الشاملة للتخصصات
 const COMPREHENSIVE_MAJORS = [
   'Medicine and Surgery',
   'Doctor of Pharmacy (PharmD)',
@@ -432,14 +430,12 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(student.name);
-  const [editMajor, setEditMajor] = useState(student.major || 'Computer Science');
-  const [editUniversity, setEditUniversity] = useState(student.university || 'Jazan University');
   const [editLevel, setEditLevel] = useState(student.level || 'Second Year');
   const [editPhone, setEditPhone] = useState(student.phone || '');
   const [editEmail, setEditEmail] = useState(student.email || '');
   const [editUsername, setEditUsername] = useState(student.username || '');
   
-  // حالات البحث المباشر
+  // حفظ التخصص والجامعة في حالتي البحث والعرض مباشرة
   const [majorSearch, setMajorSearch] = useState(student.major || '');
   const [showMajorDropdown, setShowMajorDropdown] = useState(false);
 
@@ -504,19 +500,40 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   };
 
   const handleSaveProfile = () => {
+    const updatedData = {
+      name: editName,
+      major: majorSearch.trim() || student.major || 'Computer Science',
+      university: universitySearch.trim() || student.university || 'Jazan University',
+      level: editLevel,
+      phone: editPhone,
+      email: editEmail,
+      username: editUsername,
+      skills: skillsList,
+      interests: interestsList,
+    };
+
+    // 1. تحديث الـ Context إذا وُجدت الدالة
     if (updateProfile) {
-      updateProfile({
-        name: editName,
-        major: majorSearch || editMajor,
-        university: universitySearch || editUniversity,
-        level: editLevel,
-        phone: editPhone,
-        email: editEmail,
-        username: editUsername,
-        skills: skillsList,
-        interests: interestsList,
-      });
+      updateProfile(updatedData);
     }
+
+    // 2. تحديث الـ currentUser مباشرة في الذاكرة لضمان ثباتها الفوري
+    if (currentUser && currentUser.id === student.id) {
+      Object.assign(currentUser, updatedData);
+    }
+
+    // 3. الحفظ في localStorage لضمان عدم الضياع نهائياً
+    try {
+      const storedUsers = JSON.parse(localStorage.getItem('peerora_students') || '[]');
+      const updatedStudents = storedUsers.map((s: any) => 
+        s.id === student.id ? { ...s, ...updatedData } : s
+      );
+      localStorage.setItem('peerora_students', JSON.stringify(updatedStudents));
+      localStorage.setItem('peerora_current_user', JSON.stringify({ ...student, ...updatedData }));
+    } catch (e) {
+      console.error(e);
+    }
+
     setIsEditing(false);
   };
 
@@ -560,7 +577,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
             )}
 
             <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-lavender-200 font-display text-3xl font-bold text-navy-600 shadow-sm">
-              {student.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
+              {editName ? editName.split(' ').map((n: string) => n[0]).join('').slice(0, 2) : 'NS'}
             </div>
             
             {isEditing ? (
@@ -604,7 +621,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                           <div
                             key={m}
                             onClick={() => {
-                              setEditMajor(m);
                               setMajorSearch(m);
                               setShowMajorDropdown(false);
                             }}
@@ -653,7 +669,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                           <div
                             key={u}
                             onClick={() => {
-                              setEditUniversity(u);
                               setUniversitySearch(u);
                               setShowUniversityDropdown(false);
                             }}
