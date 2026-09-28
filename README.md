@@ -7,8 +7,8 @@
 ## Prerequisites
 
 Before running the project locally, make sure you have the following installed on your machine:
-* **Node.js** (v18 or higher recommended)
-* **npm** (Node Package Manager) or **yarn / pnpm**
+- **Node.js** (v18 or higher recommended)
+- **npm** (Node Package Manager) or **yarn** / **pnpm**
 
 ---
 
@@ -20,3 +20,4 @@ Follow these steps to set up and run the project locally:
    ```bash
    git clone [https://github.com/jana99-cloud/peerora-platform.git](https://github.com/jana99-cloud/peerora-platform.git)
    cd peerora-platform
+   

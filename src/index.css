@@ -4,14 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* تعريف خط Starborn المميز */
-@font-face {
-  font-family: 'Starborn';
-  src: url('/Starborn.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
-
 @layer base {
   body {
     @apply font-body text-navy-500;
@@ -32,11 +24,6 @@
 }
 
 @layer utilities {
-  /* كلاس جاهز لتطبيق خط Starborn على أي نص عند الرغبة */
-  .font-starborn {
-    font-family: 'Starborn', sans-serif;
-  }
-
   .squiggle-bg {
     background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 40 Q 20 10, 40 40 T 70 40' stroke='%23B3A8E8' stroke-width='2' fill='none' opacity='0.3'/%3E%3C/svg%3E");
   }
