@@ -148,10 +148,16 @@ export function HomePage() {
           <AboutUsSection />
         </div>
 
-        {/* 🌟 حقوق الموقع بالشكل المطلوب */}
-        <div className="mt-8 mb-4 text-center">
+        {/* 🌟 حقوق الموقع وتفاعل البريد الإلكتروني */}
+        <div className="mt-8 mb-4 text-center space-y-1">
           <p className="text-xs sm:text-sm font-semibold text-navy-400">
             2026 © — Created by PEERORA Team
+          </p>
+          <p className="text-xs sm:text-sm font-medium text-navy-400">
+            Contact:{' '}
+            <a href="mailto:Peerora.support@gmail.com" className="hover:underline text-fuchsia-600 font-semibold">
+              Peerora.support@gmail.com
+            </a>
           </p>
         </div>
       </main>
