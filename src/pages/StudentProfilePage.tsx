@@ -1,7 +1,7 @@
 import { useApp } from '@/context/AppContext';
 import { PageShell, BackButton } from '@/components/Nav';
 import { PillButton } from '@/components/PillButton';
-import { Mail, Phone, MapPin, GraduationCap, Shield, MessageSquare, Ban, Flag, BookOpen, Award, Star, Settings, MessagesSquare, Wrench } from 'lucide-react';
+import { Mail, Phone, MapPin, GraduationCap, Shield, MessageSquare, Ban, Flag, BookOpen, Award, Star, Settings, MessagesSquare, Wrench, Edit3, Save, X } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '@/components/Modal';
 import { ConversationPurposeModal } from '@/components/ConversationPurposeModal';
@@ -10,17 +10,41 @@ import { AcademicLevelIconByValue } from '@/components/AcademicLevelIcons';
 import type { Post, ConversationDuration } from '@/data/types';
 
 export function StudentProfilePage({ studentId }: { studentId: string }) {
-  const { students, currentUser, navigate, blockUser, unblockUser, blockedUserIds, getUniversityActivityPoints, posts, startConversation } = useApp();
-  const student = students.find((s) => s.id === studentId) ?? currentUser;
+  const { students, currentUser, navigate, blockUser, unblockUser, blockedUserIds, getUniversityActivityPoints, posts, startConversation, updateProfile } = useApp() as any;
+  const student = students.find((s: any) => s.id === studentId) ?? currentUser;
+  
   const [showReport, setShowReport] = useState(false);
   const [showBlock, setShowBlock] = useState(false);
   const [showConversationModal, setShowConversationModal] = useState(false);
+  
+  // States for editing profile
+  const [isEditing, setIsEditing] = useState(false);
+  const [editName, setEditName] = useState(student.name);
+  const [editMajor, setEditMajor] = useState(student.major);
+  const [editCountry, setEditCountry] = useState(student.country);
+  const [editPhone, setEditPhone] = useState(student.phone);
+  const [editSkills, setEditSkills] = useState(student.skills.join(', '));
+  const [editInterests, setEditInterests] = useState(student.interests.join(', '));
 
   const isMe = student.id === currentUser.id;
   const isBlocked = blockedUserIds.includes(student.id);
 
   const canSeeEmail = isMe || student.privacy.emailVisibility === 'everyone' || (student.privacy.emailVisibility === 'same-university' && student.university === currentUser.university);
   const canSeePhone = isMe || student.privacy.phoneVisible;
+
+  const handleSaveProfile = () => {
+    if (updateProfile) {
+      updateProfile({
+        name: editName,
+        major: editMajor,
+        country: editCountry,
+        phone: editPhone,
+        skills: editSkills.split(',').map((s: string) => s.trim()).filter(Boolean),
+        interests: editInterests.split(',').map((i: string) => i.trim()).filter(Boolean),
+      });
+    }
+    setIsEditing(false);
+  };
 
   const peerConversationPost: Post = {
     id: `peer-${student.id}`,
@@ -47,12 +71,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
 
   const handleStartPeerConversation = (purpose: string, durationMinutes: ConversationDuration) => {
     setShowConversationModal(false);
-    const existingPost = posts.find((p) => p.id === peerConversationPost.id);
-    if (!existingPost) {
-      navigate({ name: 'activity-chat', postId: peerConversationPost.id });
-    } else {
-      navigate({ name: 'activity-chat', postId: peerConversationPost.id });
-    }
+    navigate({ name: 'activity-chat', postId: peerConversationPost.id });
     startConversation(peerConversationPost.id, purpose, durationMinutes);
   };
 
@@ -63,24 +82,86 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
         {/* Profile Header */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-lavender-400 via-fuchsia-400 to-peach-400 p-6 shadow-card sm:p-8">
           <div className="absolute right-0 top-0 h-40 w-40 squiggle-bg opacity-20" />
-          <div className="relative flex flex-col items-center gap-4 sm:flex-row sm:items-start">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-white/20 font-display text-3xl font-bold text-white shadow-pop shrink-0">
-              {student.name.split(' ').map((n) => n[0]).join('').slice(0, 2)}
+          
+          {/* Edit / Save Button for Owner */}
+          {isMe && (
+            <div className="absolute right-6 top-6 z-10 flex gap-2">
+              {isEditing ? (
+                <>
+                  <button
+                    onClick={handleSaveProfile}
+                    className="flex items-center gap-1.5 rounded-pill bg-white px-4 py-2 text-xs font-bold text-navy-500 shadow-md transition hover:bg-cream-100"
+                  >
+                    <Save size={14} /> Save
+                  </button>
+                  <button
+                    onClick={() => setIsEditing(false)}
+                    className="flex items-center gap-1.5 rounded-pill bg-black/20 px-3 py-2 text-xs font-bold text-white transition hover:bg-black/30"
+                  >
+                    <X size={14} />
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="flex items-center gap-1.5 rounded-pill bg-white/20 px-4 py-2 text-xs font-bold text-white backdrop-blur-md transition hover:bg-white/30"
+                >
+                  <Edit3 size={14} /> Edit Profile
+                </button>
+              )}
             </div>
-            <div className="flex-1 text-center sm:text-left">
-              <h1 className="font-display text-2xl font-bold text-white sm:text-3xl">{student.name}</h1>
-              <p className="mt-1 font-body text-white/90">@{student.username}</p>
-              <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
-                <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
-                  <GraduationCap size={14} /> {student.major}
-                </span>
-                <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
-                  <MapPin size={14} /> {student.country}
-                </span>
-                <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
-                  <AcademicLevelIconByValue value={student.level} size={14} className="text-white" /> {student.level}
-                </span>
-              </div>
+          )}
+
+          <div className="relative flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-white/25 font-display text-3xl font-bold text-white shadow-pop shrink-0">
+              {student.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
+            </div>
+            
+            <div className="flex-1 text-center sm:text-left w-full">
+              {isEditing ? (
+                <div className="space-y-2 max-w-md">
+                  <input
+                    type="text"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    className="w-full rounded-xl bg-white/20 px-3 py-1 font-display text-xl font-bold text-white placeholder-white/60 outline-none border border-white/40"
+                    placeholder="Full Name"
+                  />
+                  <p className="font-body text-white/90">@{student.username}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                    <input
+                      type="text"
+                      value={editMajor}
+                      onChange={(e) => setEditMajor(e.target.value)}
+                      className="rounded-xl bg-white/25 px-3 py-1 text-xs font-bold text-white outline-none border border-white/40 placeholder-white/60"
+                      placeholder="Major"
+                    />
+                    <input
+                      type="text"
+                      value={editCountry}
+                      onChange={(e) => setEditCountry(e.target.value)}
+                      className="rounded-xl bg-white/25 px-3 py-1 text-xs font-bold text-white outline-none border border-white/40 placeholder-white/60"
+                      placeholder="Country"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <h1 className="font-display text-2xl font-bold text-white sm:text-3xl">{student.name}</h1>
+                  <p className="mt-1 font-body text-white/90">@{student.username}</p>
+                  <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
+                    <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
+                      <GraduationCap size={14} /> {student.major}
+                    </span>
+                    <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
+                      <MapPin size={14} /> {student.country}
+                    </span>
+                    <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
+                      <AcademicLevelIconByValue value={student.level} size={14} className="text-white" /> {student.level}
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -93,7 +174,22 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               <h2 className="mb-3 font-display text-lg font-bold text-navy-500">Contact</h2>
               <div className="space-y-2">
                 <ContactRow icon={<Mail size={16} />} label="Email" value={canSeeEmail ? student.email : 'Hidden by privacy settings'} hidden={!canSeeEmail} />
-                <ContactRow icon={<Phone size={16} />} label="Phone" value={canSeePhone ? student.phone : 'Hidden by privacy settings'} hidden={!canSeePhone} />
+                
+                {isEditing ? (
+                  <div className="flex items-center gap-3 rounded-2xl bg-cream-50 p-3">
+                    <span className="text-navy-400"><Phone size={16} /></span>
+                    <span className="text-xs font-bold uppercase text-navy-400 w-20">Phone</span>
+                    <input
+                      type="text"
+                      value={editPhone}
+                      onChange={(e) => setEditPhone(e.target.value)}
+                      className="flex-1 rounded-xl border border-cream-300 bg-white px-3 py-1 text-sm font-semibold text-navy-500 outline-none"
+                    />
+                  </div>
+                ) : (
+                  <ContactRow icon={<Phone size={16} />} label="Phone" value={canSeePhone ? student.phone : 'Hidden by privacy settings'} hidden={!canSeePhone} />
+                )}
+
                 <div className="flex items-center gap-3 rounded-2xl bg-cream-50 p-3">
                   <UniversityLogo name={student.university} size={32} />
                   <span className="text-xs font-bold uppercase text-navy-400 w-20">University</span>
@@ -121,11 +217,24 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-navy-500">
                 <Star size={18} className="text-daffodil-500" /> Skills
               </h2>
-              <div className="flex flex-wrap gap-2">
-                {student.skills.map((skill) => (
-                  <span key={skill} className="rounded-pill bg-sky-300/50 px-3 py-1 text-xs font-bold text-sky-600">{skill}</span>
-                ))}
-              </div>
+              {isEditing ? (
+                <div>
+                  <input
+                    type="text"
+                    value={editSkills}
+                    onChange={(e) => setEditSkills(e.target.value)}
+                    className="w-full rounded-xl border border-cream-300 bg-cream-50 p-3 text-sm font-semibold text-navy-500 outline-none"
+                    placeholder="Skills separated by commas (e.g. React, TypeScript, Python)"
+                  />
+                  <p className="mt-1 text-xs text-navy-400/70">Separate skills using commas</p>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {student.skills.map((skill: string) => (
+                    <span key={skill} className="rounded-pill bg-sky-300/50 px-3 py-1 text-xs font-bold text-sky-600">{skill}</span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Interests */}
@@ -133,11 +242,24 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-navy-500">
                 <Star size={18} className="text-fuchsia-500" /> Interests
               </h2>
-              <div className="flex flex-wrap gap-2">
-                {student.interests.map((interest) => (
-                  <span key={interest} className="rounded-pill bg-fuchsia-300/50 px-3 py-1 text-xs font-bold text-fuchsia-600">{interest}</span>
-                ))}
-              </div>
+              {isEditing ? (
+                <div>
+                  <input
+                    type="text"
+                    value={editInterests}
+                    onChange={(e) => setEditInterests(e.target.value)}
+                    className="w-full rounded-xl border border-cream-300 bg-cream-50 p-3 text-sm font-semibold text-navy-500 outline-none"
+                    placeholder="Interests separated by commas (e.g. AI, Cloud, Cybersecurity)"
+                  />
+                  <p className="mt-1 text-xs text-navy-400/70">Separate interests using commas</p>
+                </div>
+              ) : (
+                <div className="flex flex-wrap gap-2">
+                  {student.interests.map((interest: string) => (
+                    <span key={interest} className="rounded-pill bg-fuchsia-300/50 px-3 py-1 text-xs font-bold text-fuchsia-600">{interest}</span>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Expertise */}
@@ -146,7 +268,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                 <Award size={18} className="text-sage-500" /> Expertise
               </h2>
               <div className="flex flex-wrap gap-2">
-                {student.expertise.map((exp) => (
+                {student.expertise.map((exp: string) => (
                   <span key={exp} className="rounded-pill bg-sage-300/50 px-3 py-1 text-xs font-bold text-sage-600">{exp}</span>
                 ))}
               </div>
@@ -159,7 +281,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                   <BookOpen size={18} className="text-teal-500" /> Courses
                 </h2>
                 <div className="flex flex-wrap gap-2">
-                  {student.courses.map((course) => (
+                  {student.courses.map((course: string) => (
                     <span key={course} className="rounded-pill bg-teal-300/50 px-3 py-1 text-xs font-bold text-teal-600">{course}</span>
                   ))}
                 </div>
@@ -170,22 +292,20 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           {/* Sidebar */}
           <div className="space-y-4">
             {isMe ? (
-              <>
-                <div className="rounded-3xl bg-white p-6 shadow-card">
-                  <h3 className="mb-3 font-display text-sm font-bold text-navy-500">My Account</h3>
-                  <div className="space-y-2">
-                    <PillButton variant="navy" className="w-full" onClick={() => navigate({ name: 'privacy' })}>
-                      <Shield size={16} /> Privacy Settings
-                    </PillButton>
-                    <PillButton variant="white" className="w-full" onClick={() => navigate({ name: 'study-groups' })}>
-                      My Study Groups
-                    </PillButton>
-                    <PillButton variant="white" className="w-full" onClick={() => navigate({ name: 'find-students' })}>
-                      Find Students
-                    </PillButton>
-                  </div>
+              <div className="rounded-3xl bg-white p-6 shadow-card">
+                <h3 className="mb-3 font-display text-sm font-bold text-navy-500">My Account</h3>
+                <div className="space-y-2">
+                  <PillButton variant="navy" className="w-full" onClick={() => navigate({ name: 'privacy' })}>
+                    <Shield size={16} /> Privacy Settings
+                  </PillButton>
+                  <PillButton variant="white" className="w-full" onClick={() => navigate({ name: 'study-groups' })}>
+                    My Study Groups
+                  </PillButton>
+                  <PillButton variant="white" className="w-full" onClick={() => navigate({ name: 'find-students' })}>
+                    Find Students
+                  </PillButton>
                 </div>
-              </>
+              </div>
             ) : (
               <div className="rounded-3xl bg-white p-6 shadow-card">
                 <h3 className="mb-3 font-display text-sm font-bold text-navy-500">Actions</h3>
