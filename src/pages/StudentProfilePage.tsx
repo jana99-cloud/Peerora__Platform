@@ -9,31 +9,46 @@ import { UniversityLogo } from '@/components/UniversityLogo';
 import { AcademicLevelIconByValue } from '@/components/AcademicLevelIcons';
 import type { Post, ConversationDuration } from '@/data/types';
 
-// القوائم المتاحة للاختيار (التخصصات والجامعات والمستويات)
-const AVAILABLE_MAJORS = [
+// قائمة واسعة تشمل التخصصات العالمية والمحلية
+const GLOBAL_MAJORS = [
   'Computer Science',
   'Software Engineering',
   'Information Systems',
   'Cybersecurity',
   'Artificial Intelligence',
-  'Computer Engineering & Networks',
-  'Data Analytics'
+  'Data Science & Analytics',
+  'Information Technology',
+  'Computer Engineering',
+  'Electrical Engineering',
+  'Mechanical Engineering',
+  'Business Administration',
+  'Medicine & Surgery',
+  'Law'
 ];
 
-const AVAILABLE_UNIVERSITIES = [
+// قائمة واسعة تشمل الجامعات المحلية والعالمية الكبرى
+const GLOBAL_UNIVERSITIES = [
   'Jazan University',
   'King Saud University',
   'King Abdulaziz University',
   'Imam Mohammad Ibn Saud Islamic University',
   'King Fahd University of Petroleum and Minerals',
-  'Princess Nourah bint Abdulrahman University'
+  'Princess Nourah bint Abdulrahman University',
+  'Massachusetts Institute of Technology (MIT)',
+  'Stanford University',
+  'Harvard University',
+  'University of Oxford',
+  'University of Cambridge',
+  'Other / International University'
 ];
 
 const AVAILABLE_LEVELS = [
   'Freshman',
   'Sophomore',
   'Junior',
-  'Senior'
+  'Senior',
+  'Graduate / Master',
+  'PhD Student'
 ];
 
 export function StudentProfilePage({ studentId }: { studentId: string }) {
@@ -42,7 +57,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   
   const [showConversationModal, setShowConversationModal] = useState(false);
   
-  // حالات التعديل
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(student.name);
   const [editMajor, setEditMajor] = useState(student.major || 'Computer Science');
@@ -52,7 +66,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const [editEmail, setEditEmail] = useState(student.email || '');
   const [editUsername, setEditUsername] = useState(student.username || '');
   
-  // قوائم المهارات والاهتمامات المتعددة
   const [skillsList, setSkillsList] = useState<string[]>(student.skills || []);
   const [newSkillInput, setNewSkillInput] = useState('');
 
@@ -65,7 +78,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const canSeeEmail = isMe || student.privacy.emailVisibility === 'everyone' || (student.privacy.emailVisibility === 'same-university' && student.university === currentUser.university);
   const canSeePhone = isMe || student.privacy.phoneVisible;
 
-  // إضافة مهارة جديدة للقائمة
   const handleAddSkill = () => {
     if (newSkillInput.trim() && !skillsList.includes(newSkillInput.trim())) {
       setSkillsList([...skillsList, newSkillInput.trim()]);
@@ -77,7 +89,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     setSkillsList(skillsList.filter(s => s !== skillToRemove));
   };
 
-  // إضافة اهتمام جديد للقائمة
   const handleAddInterest = () => {
     if (newInterestInput.trim() && !interestsList.includes(newInterestInput.trim())) {
       setInterestsList([...interestsList, newInterestInput.trim()]);
@@ -139,10 +150,8 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
     <PageShell>
       {!isMe && <BackButton label="Back" />}
       <div className="mx-auto max-w-2xl px-4 py-6">
-        
         <div className="rounded-3xl bg-white p-6 shadow-card space-y-6">
           
-          {/* Header & Avatar */}
           <div className="flex flex-col items-center border-b border-cream-200 pb-6 relative">
             {isMe && (
               <div className="absolute right-0 top-0 flex gap-2">
@@ -174,11 +183,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
 
             <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-lavender-200 font-display text-3xl font-bold text-navy-600 shadow-sm">
               {student.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
-              {isEditing && (
-                <span className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-navy-500 text-white shadow-md">
-                  <Camera size={14} />
-                </span>
-              )}
             </div>
             
             {isEditing ? (
@@ -194,10 +198,8 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
             <p className="text-xs font-semibold text-navy-400">@{student.username}</p>
           </div>
 
-          {/* Form Fields */}
           <div className="space-y-4">
-            
-            {/* Major Select */}
+            {/* Major */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Major</label>
               {isEditing ? (
@@ -206,7 +208,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                   onChange={(e) => setEditMajor(e.target.value)}
                   className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
                 >
-                  {AVAILABLE_MAJORS.map((m) => (
+                  {GLOBAL_MAJORS.map((m) => (
                     <option key={m} value={m}>{m}</option>
                   ))}
                 </select>
@@ -218,7 +220,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               )}
             </div>
 
-            {/* University Select */}
+            {/* University */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">University</label>
               {isEditing ? (
@@ -227,7 +229,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                   onChange={(e) => setEditUniversity(e.target.value)}
                   className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
                 >
-                  {AVAILABLE_UNIVERSITIES.map((u) => (
+                  {GLOBAL_UNIVERSITIES.map((u) => (
                     <option key={u} value={u}>{u}</option>
                   ))}
                 </select>
@@ -239,7 +241,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               )}
             </div>
 
-            {/* Academic Level Select */}
+            {/* Academic Level */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Academic Level</label>
               {isEditing ? (
@@ -260,16 +262,16 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               )}
             </div>
 
-            {/* Phone Number */}
+            {/* Phone Number (Supports international numbers) */}
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Phone Number</label>
+              <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Phone Number (International supported)</label>
               {isEditing ? (
                 <input
                   type="text"
                   value={editPhone}
                   onChange={(e) => setEditPhone(e.target.value)}
                   className="w-full rounded-2xl border border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 outline-none focus:border-navy-400"
-                  placeholder="+966 50 000 0000"
+                  placeholder="+1 (555) 000-0000 or +966..."
                 />
               ) : (
                 <div className="rounded-2xl border border-cream-200 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 flex items-center gap-2">
@@ -279,7 +281,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               )}
             </div>
 
-            {/* Email (Editable) */}
+            {/* Email */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Email</label>
               {isEditing ? (
@@ -316,7 +318,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               )}
             </div>
 
-            {/* Student Skills (Multi-add & Select/Tag Management) */}
+            {/* Student Skills */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Student Skills</label>
               {isEditing ? (
@@ -347,7 +349,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                         </button>
                       </span>
                     ))}
-                    {skillsList.length === 0 && <span className="text-xs text-navy-400 italic px-2">No skills added yet.</span>}
                   </div>
                 </div>
               ) : (
@@ -359,7 +360,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               )}
             </div>
 
-            {/* Student Interests (Multi-add & Tag Management) */}
+            {/* Student Interests */}
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-navy-400 mb-1">Student Interests</label>
               {isEditing ? (
@@ -390,7 +391,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                         </button>
                       </span>
                     ))}
-                    {interestsList.length === 0 && <span className="text-xs text-navy-400 italic px-2">No interests added yet.</span>}
                   </div>
                 </div>
               ) : (
