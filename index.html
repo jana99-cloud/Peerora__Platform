@@ -1,54 +1,32 @@
-@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+<!doctype html>
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+<html lang="en">
 
-@layer base {
-  body {
-    @apply font-body text-navy-500;
-    background-color: #FFFDFC;
-    background-image:
-      linear-gradient(rgba(240, 162, 98, 0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(240, 162, 98, 0.2) 1px, transparent 1px);
-    background-size: 32px 32px;
-    background-position: 0 0;
-  }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
-  }
-  h1, h2 {
-    font-family: 'Bree Serif', Georgia, serif;
-    letter-spacing: -0.025em;
-  }
-}
+  <head>
 
-@layer utilities {
-  .squiggle-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 40 Q 20 10, 40 40 T 70 40' stroke='%23B3A8E8' stroke-width='2' fill='none' opacity='0.3'/%3E%3C/svg%3E");
-  }
-  .squiggle-orange {
-    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 40 Q 20 10, 40 40 T 70 40' stroke='%23F59A5A' stroke-width='2' fill='none' opacity='0.25'/%3E%3C/svg%3E");
-  }
-  .squiggle-green {
-    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M10 40 Q 20 10, 40 40 T 70 40' stroke='%2394C88A' stroke-width='2' fill='none' opacity='0.25'/%3E%3C/svg%3E");
-  }
-  .dotted-bg {
-    background-color: #FFFDFC;
-    background-image:
-      linear-gradient(rgba(240, 162, 98, 0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(240, 162, 98, 0.2) 1px, transparent 1px);
-    background-size: 32px 32px;
-    background-position: 0 0;
-  }
-  .grid-bg {
-    background-color: #FFFDFC;
-    background-image:
-      linear-gradient(rgba(240, 162, 98, 0.2) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(240, 162, 98, 0.2) 1px, transparent 1px);
-    background-size: 32px 32px;
-    background-position: 0 0;
-  }
-  .scrollbar-hide::-webkit-scrollbar { display: none; }
-  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-}
+    <meta charset="UTF-8" />
+
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Global Student Collaboration Platform</title>
+
+    <meta property="og:image" content="https://bolt.new/static/og_default.png" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta name="twitter:image" content="https://bolt.new/static/og_default.png" />
+
+  </head>
+
+  <body>
+
+    <div id="root"></div>
+
+    <script type="module" src="/src/main.tsx"></script>
+
+  </body>
+
+</html> 
+
