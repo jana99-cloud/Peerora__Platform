@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Bree+Serif&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Belanosima:wght@400;600;700&display=swap');
+@import url('https://api.fontshare.com/v2/css?f[]=cal-sans@400,500,600,700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -18,7 +19,7 @@
     @apply font-display;
   }
   h1, h2 {
-    font-family: 'Bree Serif', Georgia, serif;
+    font-family: 'Cal Sans', sans-serif;
     letter-spacing: -0.025em;
   }
 }
