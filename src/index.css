@@ -16,8 +16,11 @@
     background-position: 0 0;
   }
 
-  /* توحيد خط Cal Sans على جميع عناصر الموقع بلا استثناء (العناوين، النصوص الوصفية، الأزرار، البطاقات) */
-  *, h1, h2, h3, h4, h5, h6, p, span, a, li, input, button, div, label {
+  /* فرض خط Cal Sans الموحد على جميع العناوين والنصوص والأزرار بلا استثناء */
+  h1, h2, h3, h4, h5, h6, 
+  .font-heading, 
+  .text-xl, .text-2xl, .text-3xl, .text-4xl, .text-5xl,
+  p, span, a, li, button, input, label {
     font-family: 'Cal Sans', sans-serif !important;
     letter-spacing: -0.025em;
   }
