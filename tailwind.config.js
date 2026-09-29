@@ -4,9 +4,11 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Cal Sans"', '"Plus Jakarta Sans"', '"Cairo"', 'sans-serif'],
-        body: ['"Belanosima"', '"Plus Jakarta Sans"', '"Cairo"', 'sans-serif'],
-        arabic: ['"Cairo"', '"Tajawal"', 'sans-serif'],
+        // تخصيص خط العناوين الكبرى
+        display: ['"Cal Sans"', 'sans-serif'],
+        // تخصيص خط الهيدر والنصوص والبوستات
+        body: ['"Belanosima"', 'sans-serif'],
+        sans: ['"Belanosima"', 'sans-serif'],
       },
       colors: {
         cream: {
