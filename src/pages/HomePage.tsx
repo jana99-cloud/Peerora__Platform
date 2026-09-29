@@ -148,10 +148,12 @@ export function HomePage() {
           <AboutUsSection />
         </div>
 
-        {/* 🌟 حقوق الموقع ومعلومات التواصل باللون الرمادي */}
+        {/* 🌟 حقوق الموقع ومعلومات التواصل المحدثة */}
         <div className="mt-8 mb-4 text-center">
-          <p className="text-xs sm:text-sm font-medium text-navy-400">
-            Made by Peerora team &bull; Contact: Peerora.support@gmail.com
+          <p className="text-xs sm:text-sm font-medium text-navy-400 leading-relaxed">
+            Created by PEERORA Team — 2026©
+            <br />
+            Contact: <a href="mailto:Peerora.support@gmail.com" className="underline hover:text-navy-600 transition-colors">Peerora.support@gmail.com</a>
           </p>
         </div>
       </main>
@@ -188,7 +190,7 @@ function HomeNav() {
           />
         </button>
         <div className="relative flex-1 max-w-xl mx-auto">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-400" size= {18} />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-navy-400" size={18} />
           <input
             type="text"
             placeholder="Search posts, students, groups..."
