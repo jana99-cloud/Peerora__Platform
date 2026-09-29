@@ -79,7 +79,7 @@ interface AppState {
 
 const AppContext = createContext<AppState | null>(null);
 
-const STORAGE_KEY = 'globalstudent_state_v1';
+const STORAGE_KEY = 'peerora_permanent_state_v2';
 
 function loadPersistedState(): Partial<PersistedState> | null {
   try {
@@ -145,7 +145,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {
-      // storage full or unavailable — non-critical
+      // storage full or unavailable
     }
   }, [isSignedUp, currentUser, posts, groups, activityChats, blockedUserIds, reportedPostIds, tasks, files, conversationSummaries, conversations, collaborationRequests]);
 

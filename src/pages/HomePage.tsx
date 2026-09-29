@@ -84,9 +84,9 @@ export function HomePage() {
               </div>
             </div>
 
-            {/* العنوان الرئيسي في المنتصف */}
+            {/* العنوان الرئيسي في المنتصف مع تطبيق الخط المميز */}
             <div className="my-8 text-center md:text-left">
-              <h1 className="font-display text-3xl sm:text-5xl font-extrabold text-navy-900 tracking-tight">
+              <h1 className="font-starborn text-3xl sm:text-5xl font-extrabold text-navy-900 tracking-tight">
                 Available activities
               </h1>
             </div>
@@ -148,12 +148,16 @@ export function HomePage() {
           <AboutUsSection />
         </div>
 
-        {/* 🌟 حقوق الموقع والمعلومات مع إيميل بلون وردي */}
-        <div className="mt-8 mb-4 text-center">
-          <p className="text-xs sm:text-sm font-medium text-navy-400 leading-relaxed">
+        {/* حقوق الموقع والتفاعل */}
+        <div className="mt-8 mb-4 text-center px-2 space-y-1">
+          <p className="text-xs sm:text-sm font-semibold text-navy-400">
             Created by PEERORA Team — 2026©
-            <br />
-            Contact: <a href="mailto:Peerora.support@gmail.com" className="text-fuchsia-500 hover:text-fuchsia-600 underline transition-colors">Peerora.support@gmail.com</a>
+          </p>
+          <p className="text-xs sm:text-sm font-medium text-navy-400">
+            Contact:{' '}
+            <a href="mailto:Peerora.support@gmail.com" className="hover:underline text-fuchsia-600 font-semibold">
+              Peerora.support@gmail.com
+            </a>
           </p>
         </div>
       </main>

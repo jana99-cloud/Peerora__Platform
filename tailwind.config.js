@@ -4,9 +4,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Cal Sans"', 'sans-serif'],
-        body: ['"Belanosima"', 'sans-serif'],
-        sans: ['"Belanosima"', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', '"Cairo"', '"Noto Nastaliq Urdu"', 'system-ui', 'sans-serif'],
+        body: ['"Plus Jakarta Sans"', '"Cairo"', '"Noto Nastaliq Urdu"', 'system-ui', 'sans-serif'],
+        arabic: ['"Cairo"', '"Tajawal"', 'sans-serif'],
       },
       colors: {
         cream: {
@@ -24,7 +24,7 @@ export default {
           800: '#0A1124',
         },
         lavender: {
-          100: '#F3E8FF',
+          100: '#F3E8FF', // أضفنا درجة 100 للخلفيات الهادئة والهوفر
           200: '#E8E4F8',
           300: '#D4CDF0',
           400: '#B3A8E8',
@@ -103,14 +103,60 @@ export default {
       },
       borderRadius: {
         pill: '9999px',
-        btn: '0.75rem',
-        card: '1rem',
+        btn: '0.75rem',  // تم توحيدها لتعطي حواف دائرية ناعمة ومتناسقة للأزرار
+        card: '1rem',    // حواف دائرية للبطاقات
         'card-lg': '1.25rem',
       },
       boxShadow: {
         soft: '0 4px 20px rgba(30,42,74,0.08)',
         card: '0 6px 24px rgba(30,42,74,0.10)',
         pop: '0 4px 0 rgba(30,42,74,0.15)',
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.3s ease-out',
+        'slide-up': 'slideUp 0.35s ease-out',
+        'pop-in': 'popIn 0.3s ease-out',
+        'slide-in-right': 'slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+        'slide-in-up': 'slideInUp 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
+        'glow-pulse': 'glowPulse 2.5s ease-in-out infinite',
+        'spark-rotate': 'sparkRotate 8s linear infinite',
+        'typing-dot': 'typingDot 1.2s ease-in-out infinite',
+        'message-pop': 'messagePop 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+      },
+      keyframes: {
+        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+        slideUp: {
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        popIn: {
+          '0%': { opacity: '0', transform: 'scale(0.95)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
+        slideInRight: {
+          '0%': { opacity: '0', transform: 'translateX(100%)' },
+          '100%': { opacity: '1', transform: 'translateX(0)' },
+        },
+        slideInUp: {
+          '0%': { opacity: '0', transform: 'translateY(24px) scale(0.98)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
+        glowPulse: {
+          '0%, 100%': { boxShadow: '0 0 16px rgba(155, 141, 217, 0.4), 0 0 32px rgba(155, 141, 217, 0.15)' },
+          '50%': { boxShadow: '0 0 28px rgba(155, 141, 217,0.65), 0 0 52px rgba(155, 141, 217, 0.25)' },
+        },
+        sparkRotate: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        typingDot: {
+          '0%, 60%, 100%': { opacity: '0.3', transform: 'translateY(0)' },
+          '30%': { opacity: '1', transform: 'translateY(-4px)' },
+        },
+        messagePop: {
+          '0%': { opacity: '0', transform: 'translateY(8px) scale(0.96)' },
+          '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+        },
       },
     },
   },
