@@ -23,8 +23,8 @@
     letter-spacing: -0.025em;
   }
 
-  /* النصوص العادية والهيدر وكروت البوستات */
-  p, span, a, li, input, button, .post-card-text {
+  /* النصوص العادية والهيدر وكروت البوستات وكل العناصر */
+  p, span, a, li, input, button, div, .post-card-text {
     font-family: 'Belanosima', sans-serif !important;
   }
 }
