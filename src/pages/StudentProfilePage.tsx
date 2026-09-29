@@ -1,7 +1,7 @@
 import { useApp } from '@/context/AppContext';
 import { PageShell, BackButton } from '@/components/Nav';
 import { PillButton } from '@/components/PillButton';
-import { Mail, Phone, MapPin, GraduationCap, Shield, MessageSquare, Ban, Flag, BookOpen, Award, Star, Settings, MessagesSquare, Wrench } from 'lucide-react';
+import { Mail, Phone, MapPin, GraduationCap, Shield, MessageSquare, Ban, Flag, BookOpen, Award, Star, Settings, MessagesSquare, Wrench, Edit3, LogOut, X } from 'lucide-react';
 import { useState } from 'react';
 import { Modal } from '@/components/Modal';
 import { ConversationPurposeModal } from '@/components/ConversationPurposeModal';
@@ -15,6 +15,11 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const [showReport, setShowReport] = useState(false);
   const [showBlock, setShowBlock] = useState(false);
   const [showConversationModal, setShowConversationModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  // حالات لتعديل البيانات الشخصية
+  const [editName, setEditName] = useState(student.name);
+  const [editMajor, setEditMajor] = useState(student.major);
 
   const isMe = student.id === currentUser.id;
   const isBlocked = blockedUserIds.includes(student.id);
@@ -54,6 +59,14 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       navigate({ name: 'activity-chat', postId: peerConversationPost.id });
     }
     startConversation(peerConversationPost.id, purpose, durationMinutes);
+  };
+
+  const handleSaveProfile = (e: React.FormEvent) => {
+    e.preventDefault();
+    // تحديث البيانات مؤقتاً في الكائن الحالي للتجربة الفورية
+    student.name = editName;
+    student.major = editMajor;
+    setShowEditModal(false);
   };
 
   return (
@@ -174,6 +187,9 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                 <div className="rounded-3xl bg-white p-6 shadow-card">
                   <h3 className="mb-3 font-display text-sm font-bold text-navy-500">My Account</h3>
                   <div className="space-y-2">
+                    <PillButton variant="primary" className="w-full" onClick={() => setShowEditModal(true)}>
+                      <Edit3 size={16} /> Edit Profile
+                    </PillButton>
                     <PillButton variant="navy" className="w-full" onClick={() => navigate({ name: 'privacy' })}>
                       <Shield size={16} /> Privacy Settings
                     </PillButton>
@@ -182,6 +198,9 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
                     </PillButton>
                     <PillButton variant="white" className="w-full" onClick={() => navigate({ name: 'find-students' })}>
                       Find Students
+                    </PillButton>
+                    <PillButton variant="red" className="w-full" onClick={() => navigate({ name: 'welcome' })}>
+                      <LogOut size={16} /> Log Out
                     </PillButton>
                   </div>
                 </div>
@@ -230,6 +249,36 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           </div>
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      <Modal open={showEditModal} onClose={() => setShowEditModal(false)} title="Edit Profile">
+        <form onSubmit={handleSaveProfile} className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold uppercase text-navy-400 mb-1">Full Name</label>
+            <input
+              type="text"
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              className="w-full rounded-2xl border-2 border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 focus:outline-none focus:border-navy-500"
+              required
+            />
+          </div>
+          <div>
+            <label className="block text-xs font-bold uppercase text-navy-400 mb-1">Major</label>
+            <input
+              type="text"
+              value={editMajor}
+              onChange={(e) => setEditMajor(e.target.value)}
+              className="w-full rounded-2xl border-2 border-cream-300 bg-cream-50 px-4 py-3 text-sm font-semibold text-navy-500 focus:outline-none focus:border-navy-500"
+              required
+            />
+          </div>
+          <div className="flex justify-end gap-3 pt-2">
+            <PillButton variant="white" onClick={() => setShowEditModal(false)}>Cancel</PillButton>
+            <PillButton variant="primary" type="submit">Save Changes</PillButton>
+          </div>
+        </form>
+      </Modal>
 
       {/* Report Modal */}
       <Modal open={showReport} onClose={() => setShowReport(false)} title="Report User">
