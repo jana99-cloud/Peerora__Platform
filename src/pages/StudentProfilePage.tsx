@@ -1,290 +1,259 @@
 import { useApp } from '@/context/AppContext';
-import { PageShell, BackButton } from '@/components/Nav';
-import { PillButton } from '@/components/PillButton';
-import { Mail, Phone, MapPin, GraduationCap, Shield, MessageSquare, Ban, Flag, BookOpen, Award, Star, MessagesSquare, Edit3, LogOut } from 'lucide-react';
+import { PageShell } from '@/components/Nav';
+import { Save, X, Search, Shield, LogOut, Plus } from 'lucide-react';
 import { useState } from 'react';
-import { Modal } from '@/components/Modal';
-import { ConversationPurposeModal } from '@/components/ConversationPurposeModal';
-import { UniversityLogo } from '@/components/UniversityLogo';
-import { AcademicLevelIconByValue } from '@/components/AcademicLevelIcons';
-import type { Post, ConversationDuration } from '@/data/types';
 
-export function StudentProfilePage({ studentId }: { studentId: string }) {
-  const { students, currentUser, navigate, blockUser, unblockUser, blockedUserIds, getUniversityActivityPoints, posts, startConversation } = useApp();
-  const student = students.find((s) => s.id === studentId) ?? currentUser;
-  const [showReport, setShowReport] = useState(false);
-  const [showBlock, setShowBlock] = useState(false);
-  const [showConversationModal, setShowConversationModal] = useState(false);
+export function EditProfilePage() {
+  const { currentUser, navigate } = useApp();
+  
+  // حالات تخزين البيانات
+  const [name, setName] = useState(currentUser.name);
+  const [username, setUsername] = useState(currentUser.username || 'new_student');
+  const [major, setMajor] = useState(currentUser.major);
+  const [university, setUniversity] = useState(currentUser.university);
+  const [academicLevel, setAcademicLevel] = useState(currentUser.level || 'First Year');
+  const [phone, setPhone] = useState(currentUser.phone || '');
+  const [email, setEmail] = useState(currentUser.email || '');
 
-  const isMe = student.id === currentUser.id;
-  const isBlocked = blockedUserIds.includes(student.id);
+  // مهارات واهتمامات
+  const [skills, setSkills] = useState<string[]>(currentUser.skills || []);
+  const [newSkill, setNewSkill] = useState('');
+  const [interests, setInterests] = useState<string[]>(currentUser.interests || []);
+  const [newInterest, setNewInterest] = useState('');
 
-  const canSeeEmail = isMe || student.privacy.emailVisibility === 'everyone' || (student.privacy.emailVisibility === 'same-university' && student.university === currentUser.university);
-  const canSeePhone = isMe || student.privacy.phoneVisible;
-
-  const peerConversationPost: Post = {
-    id: `peer-${student.id}`,
-    type: 'project',
-    title: `Collaboration with ${student.name}`,
-    major: student.major,
-    university: student.university,
-    country: student.country,
-    dueDate: new Date(Date.now() + 30 * 86400000).toISOString().slice(0, 10),
-    membersNeeded: 2,
-    membersJoined: 2,
-    description: `Peer collaboration discussion with ${student.name}. Explore shared academic interests, skills, and potential project opportunities.`,
-    authorId: student.id,
-    authorName: student.name,
-    tags: student.interests.slice(0, 3),
-    skillsNeeded: student.skills.slice(0, 5),
-    contributors: [
-      { studentId: student.id, name: student.name, major: student.major, university: student.university },
-      { studentId: currentUser.id, name: currentUser.name, major: currentUser.major, university: currentUser.university },
-    ],
-    activityFormat: 'online',
-    createdAt: new Date().toISOString().slice(0, 10),
+  const handleAddSkill = () => {
+    if (newSkill.trim() && !skills.includes(newSkill.trim())) {
+      setSkills([...skills, newSkill.trim()]);
+      setNewSkill('');
+    }
   };
 
-  const handleStartPeerConversation = (purpose: string, durationMinutes: ConversationDuration) => {
-    setShowConversationModal(false);
-    navigate({ name: 'activity-chat', postId: peerConversationPost.id });
-    startConversation(peerConversationPost.id, purpose, durationMinutes);
+  const handleAddInterest = () => {
+    if (newInterest.trim() && !interests.includes(newInterest.trim())) {
+      setInterests([...interests, newInterest.trim()]);
+      setNewInterest('');
+    }
+  };
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    currentUser.name = name;
+    currentUser.username = username;
+    currentUser.major = major;
+    currentUser.university = university;
+    currentUser.level = academicLevel;
+    currentUser.phone = phone;
+    currentUser.email = email;
+    currentUser.skills = skills;
+    currentUser.interests = interests;
+
+    navigate({ name: 'profile', studentId: currentUser.id });
   };
 
   return (
     <PageShell>
-      {!isMe && <BackButton label="Back" />}
-      <div className="mx-auto max-w-3xl">
-        {/* Profile Header */}
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-lavender-400 via-fuchsia-400 to-peach-400 p-6 shadow-card sm:p-8">
-          <div className="absolute right-0 top-0 h-40 w-40 squiggle-bg opacity-20" />
-          <div className="relative flex flex-col items-center gap-4 sm:flex-row sm:items-start">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-white/20 font-display text-3xl font-bold text-white shadow-pop shrink-0">
-              {student.name ? student.name.split(' ').map((n) => n[0]).join('').slice(0, 2) : 'ت'}
-            </div>
-            <div className="flex-1 text-center sm:text-left">
-              <h1 className="font-display text-2xl font-bold text-white sm:text-3xl">{student.name}</h1>
-              <p className="mt-1 font-body text-white/90">@{student.username || 'new_student'}</p>
-              <div className="mt-3 flex flex-wrap justify-center gap-2 sm:justify-start">
-                <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
-                  <GraduationCap size={14} /> {student.major}
-                </span>
-                <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
-                  <MapPin size={14} /> {student.country}
-                </span>
-                <span className="flex items-center gap-1.5 rounded-pill bg-white/20 px-3 py-1 text-xs font-bold text-white">
-                  <AcademicLevelIconByValue value={student.level} size={14} className="text-white" /> {student.level}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-6 grid gap-4 lg:grid-cols-3">
-          {/* Main content */}
-          <div className="lg:col-span-2 space-y-4">
-            {/* Contact */}
-            <div className="rounded-3xl bg-white p-6 shadow-card">
-              <h2 className="mb-3 font-display text-lg font-bold text-navy-500">Contact</h2>
-              <div className="space-y-2">
-                <ContactRow icon={<Mail size={16} />} label="Email" value={canSeeEmail ? student.email : 'Hidden by privacy settings'} hidden={!canSeeEmail} />
-                <ContactRow icon={<Phone size={16} />} label="Phone" value={canSeePhone ? student.phone : 'Hidden by privacy settings'} hidden={!canSeePhone} />
-                <div className="flex items-center gap-3 rounded-2xl bg-cream-50 p-3">
-                  <UniversityLogo name={student.university} size={32} />
-                  <span className="text-xs font-bold uppercase text-navy-400 w-20">University</span>
-                  <span className="text-sm font-semibold text-navy-500 flex-1">{student.university}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* University Activity Points */}
-            <div className="rounded-3xl bg-white p-6 shadow-card">
-              <h2 className="mb-3 font-display text-lg font-bold text-navy-500">University Activity</h2>
-              <div className="flex items-center gap-3 rounded-2xl bg-daffodil-300/20 p-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-btn bg-daffodil-400 text-white">
-                  <Award size={24} />
-                </div>
-                <div>
-                  <p className="text-2xl font-bold text-navy-500">{getUniversityActivityPoints(student.university).toLocaleString()}</p>
-                  <p className="text-xs font-semibold text-navy-400">Activity Points from {student.university}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Skills */}
-            <div className="rounded-3xl bg-white p-6 shadow-card">
-              <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-navy-500">
-                <Star size={18} className="text-daffodil-500" /> Skills
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {student.skills && student.skills.length > 0 ? (
-                  student.skills.map((skill) => (
-                    <span key={skill} className="rounded-pill bg-sky-300/50 px-3 py-1 text-xs font-bold text-sky-600">{skill}</span>
-                  ))
-                ) : (
-                  <p className="text-xs text-navy-400 italic">No skills added yet.</p>
-                )}
-              </div>
-            </div>
-
-            {/* Interests */}
-            <div className="rounded-3xl bg-white p-6 shadow-card">
-              <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-navy-500">
-                <Star size={18} className="text-fuchsia-500" /> Interests
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {student.interests && student.interests.length > 0 ? (
-                  student.interests.map((interest) => (
-                    <span key={interest} className="rounded-pill bg-fuchsia-300/50 px-3 py-1 text-xs font-bold text-fuchsia-600">{interest}</span>
-                  ))
-                ) : (
-                  <p className="text-xs text-navy-400 italic">No interests added yet.</p>
-                )}
-              </div>
-            </div>
-
-            {/* Expertise */}
-            <div className="rounded-3xl bg-white p-6 shadow-card">
-              <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-navy-500">
-                <Award size={18} className="text-sage-500" /> Expertise
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {student.expertise && student.expertise.length > 0 ? (
-                  student.expertise.map((exp) => (
-                    <span key={exp} className="rounded-pill bg-sage-300/50 px-3 py-1 text-xs font-bold text-sage-600">{exp}</span>
-                  ))
-                ) : (
-                  <p className="text-xs text-navy-400 italic">No expertise listed.</p>
-                )}
-              </div>
-            </div>
-
-            {/* Courses */}
-            {student.courses && student.courses.length > 0 && (
-              <div className="rounded-3xl bg-white p-6 shadow-card">
-                <h2 className="mb-3 flex items-center gap-2 font-display text-lg font-bold text-navy-500">
-                  <BookOpen size={18} className="text-teal-500" /> Courses
-                </h2>
-                <div className="flex flex-wrap gap-2">
-                  {student.courses.map((course) => (
-                    <span key={course} className="rounded-pill bg-teal-300/50 px-3 py-1 text-xs font-bold text-teal-600">{course}</span>
-                  ))}
-                </div>
-              </div>
-            )}
+      <div className="mx-auto max-w-2xl py-6">
+        <div className="relative rounded-3xl bg-white p-8 shadow-card">
+          
+          {/* Top Actions: Save & Close */}
+          <div className="flex items-center justify-end gap-3 mb-6">
+            <button
+              type="button"
+              onClick={handleSave}
+              className="flex items-center gap-2 rounded-full bg-navy-500 px-5 py-2.5 text-xs font-bold text-white shadow-md hover:bg-navy-600 transition"
+            >
+              <Save size={16} /> Save
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate({ name: 'profile', studentId: currentUser.id })}
+              className="flex h-10 w-10 items-center justify-center rounded-full bg-cream-100 text-navy-500 hover:bg-cream-200 transition"
+            >
+              <X size={18} />
+            </button>
           </div>
 
-          {/* Sidebar */}
-          <div className="space-y-4">
-            {isMe ? (
-              <div className="rounded-3xl bg-white p-6 shadow-card">
-                <h3 className="mb-3 font-display text-sm font-bold text-navy-500">My Account</h3>
-                <div className="space-y-2">
-                  <PillButton variant="primary" className="w-full" onClick={() => navigate({ name: 'edit-profile' })}>
-                    <Edit3 size={16} /> Edit Profile
-                  </PillButton>
-                  <PillButton variant="navy" className="w-full" onClick={() => navigate({ name: 'privacy' })}>
-                    <Shield size={16} /> Privacy Settings
-                  </PillButton>
-                  <PillButton variant="white" className="w-full" onClick={() => navigate({ name: 'study-groups' })}>
-                    My Study Groups
-                  </PillButton>
-                  <PillButton variant="white" className="w-full" onClick={() => navigate({ name: 'find-students' })}>
-                    Find Students
-                  </PillButton>
-                  <PillButton variant="red" className="w-full" onClick={() => navigate({ name: 'welcome' })}>
-                    <LogOut size={16} /> Log Out
-                  </PillButton>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-3xl bg-white p-6 shadow-card">
-                <h3 className="mb-3 font-display text-sm font-bold text-navy-500">Actions</h3>
-                <div className="space-y-2">
-                  <PillButton variant="primary" className="w-full" onClick={() => setShowConversationModal(true)}>
-                    <MessagesSquare size={16} /> Start Conversation
-                  </PillButton>
-                  <button
-                    onClick={() => setShowReport(true)}
-                    className="flex w-full items-center justify-center gap-2 rounded-pill border-2 border-poppy-400/30 bg-white py-3 text-sm font-bold uppercase text-poppy-500 transition hover:bg-poppy-400/10"
-                  >
-                    <Flag size={16} /> Report User
-                  </button>
-                  {isBlocked ? (
-                    <PillButton variant="sage" className="w-full" onClick={() => unblockUser(student.id)}>
-                      Unblock User
-                    </PillButton>
-                  ) : (
-                    <button
-                      onClick={() => setShowBlock(true)}
-                      className="flex w-full items-center justify-center gap-2 rounded-pill border-2 border-navy-400/30 bg-white py-3 text-sm font-bold uppercase text-navy-500 transition hover:bg-cream-200"
-                    >
-                      <Ban size={16} /> Block User
-                    </button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Privacy indicator */}
-            <div className="rounded-3xl bg-cream-200 p-4">
-              <div className="flex items-center gap-2 text-navy-400">
-                <Shield size={16} />
-                <span className="text-xs font-bold">
-                  {student.privacy?.profileVisibility === 'public' ? 'Public Profile' : 'Private Profile'}
-                </span>
-              </div>
-              <p className="mt-1 text-xs text-navy-400/80">
-                Messaging: {student.privacy?.messagingPermission?.replace('-', ' ') || 'everyone'}
-              </p>
+          {/* Avatar & Username Preview */}
+          <div className="flex flex-col items-center mb-8">
+            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-lavender-300/40 font-display text-3xl font-bold text-navy-500 shadow-sm mb-3">
+              {name ? name.split(' ').map((n) => n[0]).join('').slice(0, 2) : 'ت'}
             </div>
+            <div className="w-48 rounded-full border border-cream-300 bg-cream-50 py-2 text-center text-sm font-semibold text-navy-500 mb-1">
+              {name || 'ت'}
+            </div>
+            <span className="text-xs text-navy-400">@{username}</span>
           </div>
+
+          <form onSubmit={handleSave} className="space-y-6">
+            {/* Major */}
+            <div>
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-2">MAJOR</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-navy-400">
+                  <Search size={16} />
+                </span>
+                <input
+                  type="text"
+                  value={major}
+                  onChange={(e) => setMajor(e.target.value)}
+                  placeholder="Search major..."
+                  className="w-full rounded-2xl border border-cream-300 bg-cream-50/50 py-3.5 pl-11 pr-4 text-sm font-semibold text-navy-500 focus:border-navy-500 focus:outline-none"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* University */}
+            <div>
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-2">UNIVERSITY</label>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-navy-400">
+                  <Search size={16} />
+                </span>
+                <input
+                  type="text"
+                  value={university}
+                  onChange={(e) => setUniversity(e.target.value)}
+                  placeholder="Search university..."
+                  className="w-full rounded-2xl border border-cream-300 bg-cream-50/50 py-3.5 pl-11 pr-4 text-sm font-semibold text-navy-500 focus:border-navy-500 focus:outline-none"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Academic Level */}
+            <div>
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-2">ACADEMIC LEVEL</label>
+              <select
+                value={academicLevel}
+                onChange={(e) => setAcademicLevel(e.target.value)}
+                className="w-full rounded-2xl border border-cream-300 bg-cream-50/50 py-3.5 px-4 text-sm font-semibold text-navy-500 focus:border-navy-500 focus:outline-none appearance-none"
+              >
+                <option value="First Year">First Year</option>
+                <option value="Second Year">Second Year</option>
+                <option value="Third Year">Third Year</option>
+                <option value="Final Year">Final Year</option>
+              </select>
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-2">PHONE NUMBER</label>
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="+1 (555) 000-0000"
+                className="w-full rounded-2xl border border-cream-300 bg-cream-50/50 py-3.5 px-4 text-sm font-semibold text-navy-500 focus:border-navy-500 focus:outline-none"
+              />
+            </div>
+
+            {/* Email */}
+            <div>
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-2">EMAIL</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="student@example.com"
+                className="w-full rounded-2xl border border-cream-300 bg-cream-50/50 py-3.5 px-4 text-sm font-semibold text-navy-500 focus:border-navy-500 focus:outline-none"
+                required
+              />
+            </div>
+
+            {/* Username */}
+            <div>
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-2">USERNAME</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                placeholder="new_student"
+                className="w-full rounded-2xl border border-cream-300 bg-cream-50/50 py-3.5 px-4 text-sm font-semibold text-navy-500 focus:border-navy-500 focus:outline-none"
+                required
+              />
+            </div>
+
+            {/* Student Skills */}
+            <div>
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-2">STUDENT SKILLS</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newSkill}
+                  onChange={(e) => setNewSkill(e.target.value)}
+                  placeholder="Add a skill (e.g. Python, React)"
+                  className="flex-1 rounded-2xl border border-cream-300 bg-cream-50/50 py-3.5 px-4 text-sm font-semibold text-navy-500 focus:border-navy-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddSkill}
+                  className="flex items-center gap-1 rounded-2xl bg-fuchsia-500 px-5 py-3.5 text-xs font-bold text-white hover:bg-fuchsia-600 transition"
+                >
+                  <Plus size={16} /> Add
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {skills.map((s) => (
+                  <span key={s} className="rounded-pill bg-sky-300/40 px-3 py-1 text-xs font-bold text-sky-700">
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Student Interests */}
+            <div>
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-2">STUDENT INTERESTS</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newInterest}
+                  onChange={(e) => setNewInterest(e.target.value)}
+                  placeholder="Add an interest (e.g. AI, Cloud)"
+                  className="flex-1 rounded-2xl border border-cream-300 bg-cream-50/50 py-3.5 px-4 text-sm font-semibold text-navy-500 focus:border-navy-500 focus:outline-none"
+                />
+                <button
+                  type="button"
+                  onClick={handleAddInterest}
+                  className="flex items-center gap-1 rounded-2xl bg-fuchsia-500 px-5 py-3.5 text-xs font-bold text-white hover:bg-fuchsia-600 transition"
+                >
+                  <Plus size={16} /> Add
+                </button>
+              </div>
+              <div className="flex flex-wrap gap-2 mt-2">
+                {interests.map((i) => (
+                  <span key={i} className="rounded-pill bg-fuchsia-300/40 px-3 py-1 text-xs font-bold text-fuchsia-700">
+                    {i}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* Account Management */}
+            <div className="pt-6 border-t border-cream-300">
+              <label className="block text-xs font-bold uppercase text-navy-500 mb-3">Account Management</label>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => navigate({ name: 'privacy' })}
+                  className="flex items-center justify-center gap-2 rounded-full bg-navy-500 py-3.5 text-xs font-bold uppercase text-white hover:bg-navy-600 transition shadow-sm"
+                >
+                  <Shield size={16} /> PRIVACY SETTINGS
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate({ name: 'welcome' })}
+                  className="flex items-center justify-center gap-2 rounded-full bg-poppy-500 py-3.5 text-xs font-bold uppercase text-white hover:bg-poppy-600 transition shadow-sm"
+                >
+                  <LogOut size={16} /> LOG OUT
+                </button>
+              </div>
+            </div>
+          </form>
+
         </div>
       </div>
-
-      {/* Report Modal */}
-      <Modal open={showReport} onClose={() => setShowReport(false)} title="Report User">
-        <p className="mb-4 text-sm text-navy-400">Why are you reporting {student.name}?</p>
-        <div className="space-y-2">
-          {['Harassment or bullying', 'Spam or fake account', 'Inappropriate behavior', 'Academic dishonesty', 'Other'].map((reason) => (
-            <button
-              key={reason}
-              onClick={() => { setShowReport(false); }}
-              className="w-full rounded-2xl border-2 border-cream-300 bg-cream-50 px-4 py-3 text-left text-sm font-semibold text-navy-500 transition hover:border-poppy-400 hover:bg-poppy-400/5"
-            >
-              {reason}
-            </button>
-          ))}
-        </div>
-      </Modal>
-
-      {/* Block Modal */}
-      <Modal open={showBlock} onClose={() => setShowBlock(false)} title="Block User">
-        <p className="mb-4 text-sm text-navy-400">
-          Blocking {student.name} will prevent them from seeing your profile, messaging you, or appearing in your searches. You can unblock them anytime.
-        </p>
-        <div className="flex justify-end gap-3">
-          <PillButton variant="white" onClick={() => setShowBlock(false)}>Cancel</PillButton>
-          <PillButton variant="red" onClick={() => { blockUser(student.id); setShowBlock(false); }}>Block</PillButton>
-        </div>
-      </Modal>
-
-      <ConversationPurposeModal
-        open={showConversationModal}
-        onClose={() => setShowConversationModal(false)}
-        post={peerConversationPost}
-        onStart={handleStartPeerConversation}
-      />
     </PageShell>
-  );
-}
-
-function ContactRow({ icon, label, value, hidden }: { icon: React.ReactNode; label: string; value: string; hidden?: boolean }) {
-  return (
-    <div className="flex items-center gap-3 rounded-2xl bg-cream-50 p-3">
-      <span className="text-navy-400">{icon}</span>
-      <span className="text-xs font-bold uppercase text-navy-400 w-20">{label}</span>
-      <span className={`text-sm font-semibold ${hidden ? 'text-navy-400/50 italic' : 'text-navy-500'}`}>{value}</span>
-    </div>
   );
 }
