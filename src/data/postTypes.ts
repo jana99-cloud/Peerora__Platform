@@ -1,174 +1,575 @@
-// ملف بيانات التخصصات والجامعات الشامل لمنصة PEERORA
+import type { PostType, PostTypeMeta } from './types';
+
+export const POST_TYPES: PostTypeMeta[] = [
+  { type: 'assignment', label: 'Assignment', icon: '📚', color: 'bg-sky-500', bgColor: 'bg-sky-300', textColor: 'text-sky-600' },
+  { type: 'research', label: 'Research', icon: '🔬', color: 'bg-lavender-500', bgColor: 'bg-lavender-300', textColor: 'text-lavender-600' },
+  { type: 'study-group', label: 'Study Group', icon: '👥', color: 'bg-sage-500', bgColor: 'bg-sage-300', textColor: 'text-sage-600' },
+  { type: 'project', label: 'Project', icon: '💻', color: 'bg-navy-500', bgColor: 'bg-sky-300', textColor: 'text-navy-500' },
+  { type: 'survey', label: 'Survey', icon: '📊', color: 'bg-daffodil-500', bgColor: 'bg-daffodil-300', textColor: 'text-daffodil-600' },
+  { type: 'discussion', label: 'Discussion', icon: '💬', color: 'bg-teal-500', bgColor: 'bg-teal-300', textColor: 'text-teal-600' },
+  { type: 'presentation', label: 'Presentation', icon: '🎤', color: 'bg-peach-500', bgColor: 'bg-peach-300', textColor: 'text-peach-600' },
+  { type: 'opportunity', label: 'Academic Opportunity', icon: '🎓', color: 'bg-fuchsia-500', bgColor: 'bg-fuchsia-400', textColor: 'text-fuchsia-600' },
+  { type: 'announcement', label: 'Announcement', icon: '📢', color: 'bg-poppy-500', bgColor: 'bg-poppy-400', textColor: 'text-poppy-600' },
+];
+
+export function getPostTypeMeta(type: PostType): PostTypeMeta {
+  return POST_TYPES.find((t) => t.type === type) ?? POST_TYPES[0];
+}
+
+export interface AcademicLevelOption {
+  value: string;
+  label: string;
+  iconKey: AcademicIconKey;
+}
+
+export type AcademicIconKey = 'first' | 'second' | 'third' | 'fourth' | 'fifth' | 'graduate';
+
+export const ACADEMIC_LEVELS: AcademicLevelOption[] = [
+  { value: 'First Year', label: 'First Year', iconKey: 'first' },
+  { value: 'Second Year', label: 'Second Year', iconKey: 'second' },
+  { value: 'Third Year', label: 'Third Year', iconKey: 'third' },
+  { value: 'Fourth Year', label: 'Fourth Year', iconKey: 'fourth' },
+  { value: 'Fifth Year', label: 'Fifth Year', iconKey: 'fifth' },
+  { value: 'Graduate', label: 'Graduate', iconKey: 'graduate' },
+];
+
+export const ACADEMIC_LEVEL_VALUES = ACADEMIC_LEVELS.map((l) => l.value);
+
+export function getAcademicLevelMeta(value: string): AcademicLevelOption | undefined {
+  return ACADEMIC_LEVELS.find((l) => l.value === value);
+}
 
 export interface UniversityEntry {
-  name: string;
-  country: string;
+  name: string;
+  country: string;
+  acronym?: string;
+  logo?: string;
+}
+
+export const UNIVERSITIES: UniversityEntry[] = [
+  // Saudi Arabia
+  { name: 'King Saud University (KSU)', country: 'Saudi Arabia', acronym: 'KSU' },
+  { name: 'Princess Nourah bint Abdulrahman University (PNU)', country: 'Saudi Arabia', acronym: 'PNU' },
+  { name: 'Imam Mohammad Ibn Saud Islamic University (IMSIU)', country: 'Saudi Arabia', acronym: 'IMSIU' },
+  { name: 'King Saud bin Abdulaziz University for Health Sciences (KSAU-HS)', country: 'Saudi Arabia', acronym: 'KSAU-HS' },
+  { name: 'Prince Sultan University (PSU)', country: 'Saudi Arabia', acronym: 'PSU' },
+  { name: 'Alfaisal University', country: 'Saudi Arabia', acronym: 'AU' },
+  { name: 'Al Yamamah University', country: 'Saudi Arabia', acronym: 'YU' },
+  { name: 'Dar Al Uloom University', country: 'Saudi Arabia', acronym: 'DAU' },
+  { name: 'Majmaah University', country: 'Saudi Arabia', acronym: 'MU' },
+  { name: 'Shaqra University', country: 'Saudi Arabia', acronym: 'SU' },
+  { name: 'King Abdulaziz University (KAU)', country: 'Saudi Arabia', acronym: 'KAU' },
+  { name: 'Umm Al-Qura University (UQU)', country: 'Saudi Arabia', acronym: 'UQU' },
+  { name: 'Taibah University', country: 'Saudi Arabia', acronym: 'TU' },
+  { name: 'Islamic University of Madinah', country: 'Saudi Arabia', acronym: 'IUM' },
+  { name: 'Jeddah University', country: 'Saudi Arabia', acronym: 'JU' },
+  { name: 'Effat University', country: 'Saudi Arabia', acronym: 'EU' },
+  { name: 'Dar Al-Hekma University', country: 'Saudi Arabia', acronym: 'DAH' },
+  { name: 'University of Business and Technology (UBT)', country: 'Saudi Arabia', acronym: 'UBT' },
+  { name: 'Batterjee Medical College (BMC)', country: 'Saudi Arabia', acronym: 'BMC' },
+  { name: 'Ibn Sina National College for Medical Studies', country: 'Saudi Arabia', acronym: 'ISNC' },
+  { name: 'King Fahd University of Petroleum and Minerals (KFUPM)', country: 'Saudi Arabia', acronym: 'KFUPM' },
+  { name: 'Imam Abdulrahman bin Faisal University (IAU)', country: 'Saudi Arabia', acronym: 'IAU' },
+  { name: 'King Faisal University (KFU)', country: 'Saudi Arabia', acronym: 'KFU' },
+  { name: 'Prince Mohammad bin Fahd University (PMU)', country: 'Saudi Arabia', acronym: 'PMU' },
+  { name: 'University of Hafr Al Batin', country: 'Saudi Arabia', acronym: 'UHB' },
+  { name: 'King Khalid University (KKU)', country: 'Saudi Arabia', acronym: 'KKU' },
+  { name: 'Jazan University', country: 'Saudi Arabia', acronym: 'JU' },
+  { name: 'Najran University', country: 'Saudi Arabia', acronym: 'NU' },
+  { name: 'Al Baha University', country: 'Saudi Arabia', acronym: 'ABU' },
+  { name: 'University of Tabuk (UT)', country: 'Saudi Arabia', acronym: 'UT' },
+  { name: 'Fahd bin Sultan University (FBSU)', country: 'Saudi Arabia', acronym: 'FBSU' },
+  { name: "University of Ha'il", country: 'Saudi Arabia', acronym: 'UH' },
+  { name: 'Northern Border University', country: 'Saudi Arabia', acronym: 'NBU' },
+  { name: 'Jouf University', country: 'Saudi Arabia', acronym: 'JU' },
+  { name: 'Qassim University', country: 'Saudi Arabia', acronym: 'QU' },
+  { name: 'King Abdullah University of Science and Technology (KAUST)', country: 'Saudi Arabia', acronym: 'KAUST' },
+  // United States
+  { name: 'Massachusetts Institute of Technology (MIT)', country: 'United States', acronym: 'MIT' },
+  { name: 'Stanford University', country: 'United States', acronym: 'SU' },
+  { name: 'Harvard University', country: 'United States', acronym: 'HU' },
+  { name: 'California Institute of Technology (Caltech)', country: 'United States', acronym: 'Caltech' },
+  { name: 'Princeton University', country: 'United States', acronym: 'PU' },
+  { name: 'Yale University', country: 'United States', acronym: 'YU' },
+  { name: 'Columbia University', country: 'United States', acronym: 'CU' },
+  { name: 'University of Pennsylvania', country: 'United States', acronym: 'UPenn' },
+  { name: 'University of Chicago', country: 'United States', acronym: 'UChicago' },
+  { name: 'University of California, Berkeley', country: 'United States', acronym: 'UCB' },
+  { name: 'University of California, Los Angeles', country: 'United States', acronym: 'UCLA' },
+  { name: 'University of Michigan', country: 'United States', acronym: 'UMich' },
+  { name: 'Carnegie Mellon University', country: 'United States', acronym: 'CMU' },
+  { name: 'Georgia Institute of Technology', country: 'United States', acronym: 'Georgia Tech' },
+  { name: 'New York University', country: 'United States', acronym: 'NYU' },
+  { name: 'Duke University', country: 'United States', acronym: 'DU' },
+  { name: 'Johns Hopkins University', country: 'United States', acronym: 'JHU' },
+  { name: 'University of Texas at Austin', country: 'United States', acronym: 'UT Austin' },
+  { name: 'University of Washington', country: 'United States', acronym: 'UW' },
+  { name: 'Cornell University', country: 'United States', acronym: 'CU' },
+  // United Kingdom
+  { name: 'University of Oxford', country: 'United Kingdom', acronym: 'Oxford' },
+  { name: 'University of Cambridge', country: 'United Kingdom', acronym: 'Cambridge' },
+  { name: 'Imperial College London', country: 'United Kingdom', acronym: 'ICL' },
+  { name: 'University College London', country: 'United Kingdom', acronym: 'UCL' },
+  { name: 'University of Edinburgh', country: 'United Kingdom', acronym: 'Edinburgh' },
+  { name: 'King\'s College London', country: 'United Kingdom', acronym: 'KCL' },
+  { name: 'London School of Economics', country: 'United Kingdom', acronym: 'LSE' },
+  { name: 'University of Manchester', country: 'United Kingdom', acronym: 'Manchester' },
+  { name: 'University of Warwick', country: 'United Kingdom', acronym: 'Warwick' },
+  { name: 'University of Bristol', country: 'United Kingdom', acronym: 'Bristol' },
+  { name: 'University of Glasgow', country: 'United Kingdom', acronym: 'Glasgow' },
+  // Canada
+  { name: 'University of Toronto', country: 'Canada', acronym: 'UofT' },
+  { name: 'University of British Columbia', country: 'Canada', acronym: 'UBC' },
+  { name: 'McGill University', country: 'Canada', acronym: 'McGill' },
+  { name: 'University of Waterloo', country: 'Canada', acronym: 'Waterloo' },
+  { name: 'University of Alberta', country: 'Canada', acronym: 'UAlberta' },
+  { name: 'McMaster University', country: 'Canada', acronym: 'McMaster' },
+  { name: 'University of Montreal', country: 'Canada', acronym: 'UdeM' },
+  // Switzerland
+  { name: 'ETH Zurich', country: 'Switzerland', acronym: 'ETH' },
+  { name: 'EPFL', country: 'Switzerland', acronym: 'EPFL' },
+  { name: 'University of Zurich', country: 'Switzerland', acronym: 'UZH' },
+  { name: 'University of Geneva', country: 'Switzerland', acronym: 'UNIGE' },
+  { name: 'University of Basel', country: 'Switzerland', acronym: 'UNIBAS' },
+  // Japan
+  { name: 'University of Tokyo', country: 'Japan', acronym: 'UTokyo' },
+  { name: 'Kyoto University', country: 'Japan', acronym: 'KU' },
+  { name: 'Osaka University', country: 'Japan', acronym: 'OU' },
+  { name: 'Tohoku University', country: 'Japan', acronym: 'TU' },
+  { name: 'Tokyo Institute of Technology', country: 'Japan', acronym: 'Tokyo Tech' },
+  // Singapore
+  { name: 'National University of Singapore (NUS)', country: 'Singapore', acronym: 'NUS' },
+  { name: 'Nanyang Technological University', country: 'Singapore', acronym: 'NTU' },
+  { name: 'Singapore Management University', country: 'Singapore', acronym: 'SMU' },
+  { name: 'Singapore University of Technology and Design', country: 'Singapore', acronym: 'SUTD' },
+  // Germany
+  { name: 'Technical University of Munich', country: 'Germany', acronym: 'TUM' },
+  { name: 'Heidelberg University', country: 'Germany', acronym: 'HD' },
+  { name: 'RWTH Aachen University', country: 'Germany', acronym: 'RWTH' },
+  { name: 'Humboldt University of Berlin', country: 'Germany', acronym: 'HUB' },
+  { name: 'Free University of Berlin', country: 'Germany', acronym: 'FUB' },
+  { name: 'University of Freiburg', country: 'Germany', acronym: 'UF' },
+  // Australia
+  { name: 'University of Melbourne', country: 'Australia', acronym: 'UniMelb' },
+  { name: 'University of Sydney', country: 'Australia', acronym: 'USyd' },
+  { name: 'University of New South Wales', country: 'Australia', acronym: 'UNSW' },
+  { name: 'Monash University', country: 'Australia', acronym: 'Monash' },
+  { name: 'University of Queensland', country: 'Australia', acronym: 'UQ' },
+  { name: 'Australian National University', country: 'Australia', acronym: 'ANU' },
+  // South Africa
+  { name: 'University of Cape Town', country: 'South Africa', acronym: 'UCT' },
+  { name: 'University of the Witwatersrand', country: 'South Africa', acronym: 'Wits' },
+  { name: 'Stellenbosch University', country: 'South Africa', acronym: 'SU' },
+  { name: 'University of Pretoria', country: 'South Africa', acronym: 'UP' },
+  // France
+  { name: 'Sorbonne University', country: 'France', acronym: 'Sorbonne' },
+  { name: 'École Polytechnique', country: 'France', acronym: 'EP' },
+  { name: 'Paris-Saclay University', country: 'France', acronym: 'UPS' },
+  { name: 'École Normale Supérieure', country: 'France', acronym: 'ENS' },
+  // China
+  { name: 'Tsinghua University', country: 'China', acronym: 'THU' },
+  { name: 'Peking University', country: 'China', acronym: 'PKU' },
+  { name: 'Shanghai Jiao Tong University', country: 'China', acronym: 'SJTU' },
+  { name: 'Fudan University', country: 'China', acronym: 'FDU' },
+  { name: 'Zhejiang University', country: 'China', acronym: 'ZJU' },
+  // South Korea
+  { name: 'Seoul National University', country: 'South Korea', acronym: 'SNU' },
+  { name: 'KAIST', country: 'South Korea', acronym: 'KAIST' },
+  { name: 'Yonsei University', country: 'South Korea', acronym: 'YU' },
+  { name: 'Korea University', country: 'South Korea', acronym: 'KU' },
+  { name: 'POSTECH', country: 'South Korea', acronym: 'POSTECH' },
+  // India
+  { name: 'Indian Institute of Technology Delhi', country: 'India', acronym: 'IITD' },
+  { name: 'Indian Institute of Technology Bombay', country: 'India', acronym: 'IITB' },
+  { name: 'Indian Institute of Technology Madras', country: 'India', acronym: 'IITM' },
+  { name: 'Indian Institute of Science', country: 'India', acronym: 'IISc' },
+  { name: 'University of Delhi', country: 'India', acronym: 'DU' },
+  // Netherlands
+  { name: 'Delft University of Technology', country: 'Netherlands', acronym: 'TU Delft' },
+  { name: 'University of Amsterdam', country: 'Netherlands', acronym: 'UvA' },
+  { name: 'Leiden University', country: 'Netherlands', acronym: 'LU' },
+  { name: 'Wageningen University', country: 'Netherlands', acronym: 'WU' },
+  // Italy
+  { name: 'University of Bologna', country: 'Italy', acronym: 'UNIBO' },
+  { name: 'Politecnico di Milano', country: 'Italy', acronym: 'PoliMi' },
+  { name: 'Sapienza University of Rome', country: 'Italy', acronym: 'Sapienza' },
+  { name: 'University of Padua', country: 'Italy', acronym: 'UNIPD' },
+  // Spain
+  { name: 'University of Barcelona', country: 'Spain', acronym: 'UB' },
+  { name: 'Autonomous University of Madrid', country: 'Spain', acronym: 'UAM' },
+  { name: 'Pompeu Fabra University', country: 'Spain', acronym: 'UPF' },
+  { name: 'IE University', country: 'Spain', acronym: 'IE' },
+  // Sweden
+  { name: 'KTH Royal Institute of Technology', country: 'Sweden', acronym: 'KTH' },
+  { name: 'Lund University', country: 'Sweden', acronym: 'LU' },
+  { name: 'Uppsala University', country: 'Sweden', acronym: 'UU' },
+  { name: 'Stockholm University', country: 'Sweden', acronym: 'SU' },
+  // UAE
+  { name: 'Khalifa University', country: 'United Arab Emirates', acronym: 'KU' },
+  { name: 'United Arab Emirates University', country: 'United Arab Emirates', acronym: 'UAEU' },
+  { name: 'American University of Sharjah', country: 'United Arab Emirates', acronym: 'AUS' },
+  { name: 'New York University Abu Dhabi', country: 'United Arab Emirates', acronym: 'NYUAD' },
+  // Egypt
+  { name: 'Cairo University', country: 'Egypt', acronym: 'CU' },
+  { name: 'American University in Cairo', country: 'Egypt', acronym: 'AUC' },
+  { name: 'Alexandria University', country: 'Egypt', acronym: 'AU' },
+  { name: 'Ain Shams University', country: 'Egypt', acronym: 'ASU' },
+  // Brazil
+  { name: 'University of São Paulo', country: 'Brazil', acronym: 'USP' },
+  { name: 'Federal University of Rio de Janeiro', country: 'Brazil', acronym: 'UFRJ' },
+  { name: 'State University of Campinas', country: 'Brazil', acronym: 'UNICAMP' },
+  // Other
+  { name: 'University of Hong Kong', country: 'Hong Kong', acronym: 'HKU' },
+  { name: 'Hong Kong University of Science and Technology', country: 'Hong Kong', acronym: 'HKUST' },
+  { name: 'University of Copenhagen', country: 'Denmark', acronym: 'UCPH' },
+  { name: 'University of Helsinki', country: 'Finland', acronym: 'UH' },
+  { name: 'University of Oslo', country: 'Norway', acronym: 'UiO' },
+  { name: 'KU Leuven', country: 'Belgium', acronym: 'KUL' },
+  { name: 'University of Auckland', country: 'New Zealand', acronym: 'UOA' },
+  { name: 'University of Dublin, Trinity College', country: 'Ireland', acronym: 'TCD' },
+  { name: 'University of Vienna', country: 'Austria', acronym: 'UV' },
+  { name: 'University of Warsaw', country: 'Poland', acronym: 'UW' },
+  { name: 'Charles University', country: 'Czech Republic', acronym: 'CUNI' },
+  { name: 'University of Istanbul', country: 'Turkey', acronym: 'IU' },
+  { name: 'University of Tehran', country: 'Iran', acronym: 'UT' },
+  { name: 'University of Nairobi', country: 'Kenya', acronym: 'UoN' },
+  { name: 'University of Lagos', country: 'Nigeria', acronym: 'UNILAG' },
+  { name: 'University of Buenos Aires', country: 'Argentina', acronym: 'UBA' },
+  { name: 'National Autonomous University of Mexico', country: 'Mexico', acronym: 'UNAM' },
+  { name: 'University of Malaya', country: 'Malaysia', acronym: 'UM' },
+  { name: 'Nanyang University', country: 'Malaysia', acronym: 'NU' },
+  { name: 'Chulalongkorn University', country: 'Thailand', acronym: 'CU' },
+  { name: 'University of Indonesia', country: 'Indonesia', acronym: 'UI' },
+  { name: 'University of the Philippines', country: 'Philippines', acronym: 'UP' },
+  { name: 'Hebrew University of Jerusalem', country: 'Israel', acronym: 'HUJ' },
+  { name: 'Technion - Israel Institute of Technology', country: 'Israel', acronym: 'Technion' },
+  { name: 'Tel Aviv University', country: 'Israel', acronym: 'TAU' },
+  { name: 'University of Jordan', country: 'Jordan', acronym: 'UJ' },
+  { name: 'American University of Beirut', country: 'Lebanon', acronym: 'AUB' },
+  { name: 'Qatar University', country: 'Qatar', acronym: 'QU' },
+  { name: 'Hamad Bin Khalifa University', country: 'Qatar', acronym: 'HBKU' },
+  { name: 'Kuwait University', country: 'Kuwait', acronym: 'KU' },
+  { name: 'Sultan Qaboos University', country: 'Oman', acronym: 'SQU' },
+  { name: 'University of Bahrain', country: 'Bahrain', acronym: 'UOB' },
+  { name: 'Morocco Mohammed V University', country: 'Morocco', acronym: 'UM5' },
+  { name: 'Hassan II University of Casablanca', country: 'Morocco', acronym: 'UNIH2' },
+  { name: 'University of Tunis', country: 'Tunisia', acronym: 'UT' },
+  { name: 'University of Algiers', country: 'Algeria', acronym: 'UA' },
+  { name: 'University of Khartoum', country: 'Sudan', acronym: 'UofK' },
+];
+
+export const UNIVERSITY_NAMES = UNIVERSITIES.map((u) => u.name);
+
+export function getUniversityEntry(name: string): UniversityEntry | undefined {
+  return UNIVERSITIES.find((u) => u.name === name);
+}
+
+export function getUniversityCountry(name: string): string {
+  return UNIVERSITIES.find((u) => u.name === name)?.country ?? '';
+}
+
+export function searchUniversities(query: string): UniversityEntry[] {
+  if (!query.trim()) return UNIVERSITIES;
+  const q = query.toLowerCase();
+  return UNIVERSITIES.filter((u) =>
+    u.name.toLowerCase().includes(q) ||
+    (u.acronym?.toLowerCase().includes(q)) ||
+    u.country.toLowerCase().includes(q)
+  );
 }
 
 export const COUNTRIES = [
-  "France", "Netherlands", "Switzerland", "Singapore", "India", 
-  "United Arab Emirates", "Qatar", "Turkey", "Brazil", "South Africa", "Saudi Arabia"
-];
-
-export const UNIVERSITIES: UniversityEntry[] = [
-  // السعودية والخليج
-  { name: "King Saud University (KSU)", country: "Saudi Arabia" },
-  { name: "Princess Nourah bint Abdulrahman University (PNU)", country: "Saudi Arabia" },
-  { name: "Jazan University", country: "Saudi Arabia" },
-  { name: "King Fahd University of Petroleum and Minerals (KFUPM)", country: "Saudi Arabia" },
-  { name: "King Abdulaziz University (KAU)", country: "Saudi Arabia" },
-  { name: "Imam Abdulrahman bin Faisal University (IAU)", country: "Saudi Arabia" },
-  // فرنسا
-  { name: "PSL University", country: "France" },
-  { name: "Sorbonne University", country: "France" },
-  { name: "Paris-Saclay University", country: "France" },
-  { name: "École Polytechnique", country: "France" },
-  { name: "École Normale Supérieure", country: "France" },
-  { name: "University of Strasbourg", country: "France" },
-  { name: "University of Lyon", country: "France" },
-  // هولندا
-  { name: "University of Amsterdam", country: "Netherlands" },
-  { name: "Delft University of Technology", country: "Netherlands" },
-  { name: "Eindhoven University of Technology", country: "Netherlands" },
-  { name: "Leiden University", country: "Netherlands" },
-  { name: "Utrecht University", country: "Netherlands" },
-  { name: "Erasmus University Rotterdam", country: "Netherlands" },
-  // سويسرا
-  { name: "ETH Zurich", country: "Switzerland" },
-  { name: "EPFL", country: "Switzerland" },
-  { name: "University of Zurich", country: "Switzerland" },
-  { name: "University of Geneva", country: "Switzerland" },
-  { name: "University of Lausanne", country: "Switzerland" },
-  // سنغافورة
-  { name: "National University of Singapore", country: "Singapore" },
-  { name: "Nanyang Technological University", country: "Singapore" },
-  { name: "Singapore Management University", country: "Singapore" },
-  // الهند
-  { name: "Indian Institute of Technology Bombay", country: "India" },
-  { name: "Indian Institute of Technology Delhi", country: "India" },
-  { name: "Indian Institute of Technology Madras", country: "India" },
-  { name: "Indian Institute of Technology Kanpur", country: "India" },
-  { name: "Indian Institute of Technology Kharagpur", country: "India" },
-  { name: "Indian Institute of Science", country: "India" },
-  { name: "University of Delhi", country: "India" },
-  { name: "Jawaharlal Nehru University", country: "India" },
-  { name: "University of Mumbai", country: "India" },
-  // الإمارات
-  { name: "United Arab Emirates University", country: "United Arab Emirates" },
-  { name: "Khalifa University", country: "United Arab Emirates" },
-  { name: "American University of Sharjah", country: "United Arab Emirates" },
-  { name: "University of Sharjah", country: "United Arab Emirates" },
-  { name: "Zayed University", country: "United Arab Emirates" },
-  { name: "American University in Dubai", country: "United Arab Emirates" },
-  // قطر
-  { name: "Qatar University", country: "Qatar" },
-  { name: "Hamad Bin Khalifa University", country: "Qatar" },
-  { name: "Doha Institute for Graduate Studies", country: "Qatar" },
-  // تركيا
-  { name: "Middle East Technical University", country: "Turkey" },
-  { name: "Istanbul Technical University", country: "Turkey" },
-  { name: "Boğaziçi University", country: "Turkey" },
-  { name: "Istanbul University", country: "Turkey" },
-  { name: "Hacettepe University", country: "Turkey" },
-  { name: "Koç University", country: "Turkey" },
-  { name: "Bilkent University", country: "Turkey" },
-  // البرازيل
-  { name: "University of São Paulo", country: "Brazil" },
-  { name: "University of Campinas", country: "Brazil" },
-  { name: "Federal University of Rio de Janeiro", country: "Brazil" },
-  { name: "Federal University of Minas Gerais", country: "Brazil" },
-  { name: "University of Brasília", country: "Brazil" },
-  // جنوب إفريقيا
-  { name: "University of Cape Town", country: "South Africa" },
-  { name: "University of the Witwatersrand", country: "South Africa" },
-  { name: "Stellenbosch University", country: "South Africa" },
-  { name: "University of Johannesburg", country: "South Africa" },
-  { name: "University of Pretoria", country: "South Africa" }
+  'United States', 'United Kingdom', 'Saudi Arabia', 'Canada', 'Switzerland',
+  'Japan', 'Singapore', 'South Africa', 'Germany', 'Australia',
+  'France', 'China', 'South Korea', 'India', 'Netherlands',
+  'Italy', 'Spain', 'Sweden', 'United Arab Emirates', 'Egypt',
+  'Brazil', 'Hong Kong', 'Denmark', 'Finland', 'Norway',
+  'Belgium', 'New Zealand', 'Ireland', 'Austria', 'Poland',
+  'Czech Republic', 'Turkey', 'Iran', 'Kenya', 'Nigeria',
+  'Argentina', 'Mexico', 'Malaysia', 'Thailand', 'Indonesia',
+  'Philippines', 'Israel', 'Jordan', 'Lebanon', 'Qatar',
+  'Kuwait', 'Oman', 'Bahrain', 'Morocco', 'Tunisia',
+  'Algeria', 'Sudan',
 ];
 
 export const MAJORS = [
-  // Computer Science & IT
-  "Computer Science", "Software Engineering", "Information Technology", "Information Systems",
-  "Information Security", "Cybersecurity", "Artificial Intelligence", "Machine Learning", "Deep Learning",
-  "Data Science", "Data Analytics", "Big Data", "Computer Engineering", "Computer Networks",
-  "Cloud Computing", "Cloud Engineering", "Database Systems", "Web Development", "Mobile Application Development",
-  "Game Development", "Computer Graphics", "Human-Computer Interaction", "Robotics", "Internet of Things",
-  "Embedded Systems", "Computer Vision", "Natural Language Processing", "Bioinformatics", "Computational Science",
-  "Digital Forensics", "Blockchain Technology", "Cryptography", "Network Security", "DevOps",
-  "Software Architecture", "Operating Systems", "Distributed Systems", "Parallel Computing", "Quantum Computing", "Computational Biology",
-  
-  // Engineering
-  "Civil Engineering", "Mechanical Engineering", "Electrical Engineering", "Electronics Engineering",
-  "Chemical Engineering", "Industrial Engineering", "Aerospace Engineering", "Biomedical Engineering",
-  "Environmental Engineering", "Materials Engineering", "Mechatronics Engineering", "Architectural Engineering",
-  "Petroleum Engineering", "Nuclear Engineering", "Manufacturing Engineering", "Systems Engineering",
-  "Telecommunications Engineering", "Automotive Engineering", "Marine Engineering", "Mining Engineering",
-  "Geological Engineering", "Renewable Energy Engineering", "Robotics Engineering", "Artificial Intelligence Engineering",
-
-  // Business & Management
-  "Business Administration", "Accounting", "Finance", "Marketing", "Management", "Human Resources",
-  "International Business", "Entrepreneurship", "Business Analytics", "Project Management", "Supply Chain Management",
-  "Operations Management", "Banking", "Insurance", "Investment", "Economics", "FinTech",
-  "Management Information Systems", "Digital Marketing", "E-Commerce", "Real Estate Management", "Hospitality Management", "Tourism Management",
-
-  // Natural Sciences
-  "Mathematics", "Applied Mathematics", "Statistics", "Physics", "Applied Physics", "Chemistry",
-  "Biochemistry", "Biology", "Microbiology", "Biotechnology", "Genetics", "Molecular Biology",
-  "Neuroscience", "Astronomy", "Astrophysics", "Geology", "Earth Sciences", "Environmental Science",
-  "Marine Science", "Oceanography", "Zoology", "Botany",
-
-  // Medicine & Health
-  "Medicine", "Dentistry", "Pharmacy", "Nursing", "Public Health", "Physical Therapy", "Occupational Therapy",
-  "Radiology", "Medical Laboratory Science", "Nutrition", "Dietetics", "Veterinary Medicine",
-  "Biomedical Sciences", "Medical Imaging", "Respiratory Therapy", "Emergency Medical Services",
-  "Health Informatics", "Epidemiology", "Healthcare Administration", "Medical Technology",
-
-  // Social Sciences
-  "Psychology", "Sociology", "Political Science", "International Relations", "Anthropology", "Geography",
-  "Communication", "Media Studies", "Journalism", "Social Work", "Criminology", "Development Studies", "Human Geography", "Social Psychology",
-
-  // Law
-  "Law", "International Law", "Commercial Law", "Criminal Law", "Constitutional Law", "Human Rights Law",
-  "Intellectual Property Law", "Environmental Law", "Corporate Law", "Cyber Law", "Tax Law",
-
-  // Arts & Humanities
-  "English", "Arabic", "Linguistics", "Translation", "History", "Philosophy", "Literature", "Fine Arts",
-  "Graphic Design", "Interior Design", "Fashion Design", "Music", "Theatre", "Film", "Photography",
-  "Animation", "Architecture", "Archaeology", "Cultural Studies", "Visual Arts",
-
-  // Education
-  "Education", "Early Childhood Education", "Elementary Education", "Secondary Education", "Special Education",
-  "Educational Technology", "Educational Psychology", "Curriculum and Instruction", "Educational Leadership",
-  "TESOL", "Language Education", "Mathematics Education", "Science Education", "Computer Science Education",
-
-  // Agriculture & Environment
-  "Agriculture", "Agricultural Engineering", "Forestry", "Fisheries", "Animal Science", "Horticulture",
-  "Food Science", "Soil Science", "Environmental Management", "Wildlife Conservation", "Plant Science", "Agricultural Economics", "Food Technology",
-
-  // Services
-  "Hospitality", "Tourism", "Aviation", "Transportation", "Logistics", "Sports Science", "Physical Education",
-  "Fitness", "Culinary Arts", "Safety Management", "Security Services", "Disaster Management"
+  // Existing
+  'Computer Science',
+  'Engineering',
+  'Business',
+  'Medicine',
+  'Law',
+  'Arts & Design',
+  'Psychology',
+  'Biology',
+  'Mathematics',
+  'Political Science',
+  'Architecture',
+  'Economics',
+  // Medicine & Health
+  'Medicine and Surgery',
+  'Doctor of Pharmacy (PharmD)',
+  'Dental Medicine and Surgery',
+  'Nursing Sciences',
+  'Medical Laboratory Technology',
+  'Physical Therapy',
+  'Radiography & Medical Imaging',
+  'Clinical Nutrition',
+  'Public Health & Epidemiology',
+  'Health Administration',
+  'Emergency Medical Services',
+  'Anesthesia Technology',
+  'Health Sciences',
+  'Medical Sciences',
+  'Veterinary Medicine',
+  'Optometry',
+  'Audiology',
+  'Speech-Language Pathology',
+  'Occupational Therapy',
+  'Dental Hygiene',
+  'Pharmacology',
+  'Toxicology',
+  'Forensic Science',
+  'Biotechnology',
+  'Genetics',
+  'Immunology',
+  'Microbiology',
+  'Anatomy',
+  'Physiology',
+  'Pathology',
+  'Epidemiology',
+  'Global Health',
+  'Health Informatics',
+  'Rehabilitation Sciences',
+  'Sports Medicine',
+  // Engineering
+  'Civil Engineering',
+  'Electrical Engineering',
+  'Mechanical Engineering',
+  'Chemical Engineering',
+  'Industrial Engineering',
+  'Petroleum Engineering',
+  'Aerospace Engineering',
+  'Biomedical Engineering',
+  'Environmental Engineering',
+  'Computer Engineering',
+  'Software Engineering',
+  'Architectural Engineering',
+  'Materials Engineering',
+  'Nuclear Engineering',
+  'Structural Engineering',
+  'Geotechnical Engineering',
+  'Transportation Engineering',
+  'Water Resources Engineering',
+  'Mining Engineering',
+  'Marine Engineering',
+  'Automotive Engineering',
+  'Manufacturing Engineering',
+  'Mechatronics',
+  'Nanotechnology Engineering',
+  'Telecommunications Engineering',
+  // Computer & IT
+  'Information Technology',
+  'Artificial Intelligence & Data Science',
+  'Artificial Intelligence',
+  'Data Science',
+  'Cybersecurity',
+  'Information Systems',
+  'Robotics & Autonomous Systems',
+  'Robotics',
+  'Machine Learning',
+  'Computational Science',
+  'Computer Networks',
+  'Database Systems',
+  'Cloud Computing',
+  'Human-Computer Interaction',
+  'Game Development',
+  'Web Development',
+  'Mobile Application Development',
+  'Digital Forensics',
+  'Blockchain Technology',
+  'Quantum Computing',
+  // Natural Sciences
+  'Physics',
+  'Chemistry',
+  'Biochemistry',
+  'Geology / Earth Sciences',
+  'Environmental Sciences',
+  'Statistics & Actuarial Science',
+  'Statistics',
+  'Applied Mathematics',
+  'Pure Mathematics',
+  'Marine Biology',
+  'Molecular Biology',
+  'Cell Biology',
+  'Ecology',
+  'Evolutionary Biology',
+  'Plant Sciences',
+  'Zoology',
+  'Entomology',
+  'Astronomy',
+  'Astrophysics',
+  'Meteorology',
+  'Oceanography',
+  'Paleontology',
+  // Business & Management
+  'Business Administration',
+  'Accounting',
+  'Finance & Investment',
+  'Finance',
+  'Marketing',
+  'Management Information Systems (MIS)',
+  'Human Resource Management (HRM)',
+  'Supply Chain Management & Logistics',
+  'Risk Management & Insurance',
+  'E-Commerce',
+  'Tourism & Hospitality Management',
+  'Tourism',
+  'Hospitality',
+  'Management',
+  'Human Resources',
+  'International Business',
+  'Entrepreneurship',
+  'Project Management',
+  'Operations Management',
+  'Corporate Strategy',
+  'Business Analytics',
+  'Actuarial Science',
+  'Real Estate Management',
+  'Aviation Management',
+  'Insurance',
+  'Compliance',
+  // Law
+  'Law (Jurisprudence)',
+  'Islamic Law (Sharia)',
+  'International Law',
+  'Criminal Law',
+  'Commercial Law',
+  'Human Rights Law',
+  'Maritime Law',
+  // Humanities & Social Sciences
+  'Sociology',
+  'International Relations',
+  'History',
+  'Geography',
+  'Political Science',
+  'Anthropology',
+  'Archaeology',
+  'Philosophy',
+  'Religious Studies',
+  'Cultural Studies',
+  'Gender Studies',
+  'Criminology',
+  'Social Work',
+  'Demography',
+  'Public Administration',
+  'Public Policy',
+  'Diplomacy',
+  // Education
+  'Special Education',
+  'Early Childhood Education',
+  'Physical Education & Sports Science',
+  'Curriculum & Instruction',
+  'Education',
+  'Educational Leadership',
+  'Higher Education',
+  'Adult Education',
+  'Educational Technology',
+  'Science Education',
+  'Mathematics Education',
+  'Language Education',
+  // Languages & Literature
+  'Arabic Language and Literature',
+  'English Language & Translation',
+  'English Language',
+  'Translation',
+  'Languages',
+  'Linguistics',
+  'Comparative Literature',
+  'Modern Languages',
+  'French Language',
+  'Spanish Language',
+  'German Language',
+  'Chinese Language',
+  'Japanese Language',
+  'Korean Language',
+  'Literature',
+  'Applied Linguistics',
+  'Interpreting',
+  // Media & Communication
+  'Mass Communication & Digital Media',
+  'Mass Communication',
+  'Digital Media',
+  'Journalism',
+  'Media Studies',
+  'Broadcast Journalism',
+  'Print Journalism',
+  'Public Relations',
+  'Advertising',
+  'Film Studies',
+  'Photography',
+  'Media Production',
+  'Communication Studies',
+  'Corporate Communication',
+  // Arts & Design
+  'Interior Design',
+  'Urban Planning',
+  'Graphic Design',
+  'Visual Arts',
+  'Fashion & Textile Design',
+  'Fashion Design',
+  'Fine Arts & Musicology',
+  'Fine Arts',
+  'Music',
+  'Culinary Arts',
+  'Product Design',
+  'Industrial Design',
+  'Animation',
+  'Illustration',
+  'Ceramic Arts',
+  'Calligraphy',
+  'Theater Arts',
+  'Dance',
+  'Art History',
+  'Creative Writing',
+  'UX/UI Design',
+  // Agriculture & Environment
+  'Agricultural Sciences',
+  'Agriculture',
+  'Food Science & Technology',
+  'Food Science',
+  'Marine Sciences',
+  'Environmental Management',
+  'Forestry',
+  'Horticulture',
+  'Aquaculture',
+  'Agronomy',
+  'Animal Science',
+  'Soil Science',
+  'Plant Pathology',
+  'Agricultural Engineering',
+  // Aviation & Sports
+  'Aviation',
+  'Aviation Management',
+  'Aviation Science',
+  'Aerospace Flight',
+  'Pilot Training',
+  'Sports Sciences',
+  'Physical Education',
+  'Sports Management',
+  'Sports Psychology',
+  'Kinesiology',
+  // Other
+  'Library and Information Science',
+  'Museum Studies',
+  'Gerontology',
+  'Disability Studies',
+  'Peace and Conflict Studies',
+  'Sustainable Development',
+  'Climate Science',
+  'Renewable Energy',
+  'Logistics and Transport',
+  'Military Science',
+  'Homeland Security',
+  'Intelligence Studies',
 ];
-
-export const ACADEMIC_LEVELS = [
-  { value: "Associate Degree", label: "Associate Degree", iconKey: "book" },
-  { value: "Diploma", label: "Diploma", iconKey: "book" },
-  { value: "Bachelor's Degree", label: "Bachelor's Degree", iconKey: "graduation" },
-  { value: "Master's Degree", label: "Master's Degree", iconKey: "award" },
-  { value: "Doctorate / PhD", label: "Doctorate / PhD", iconKey: "star" },
-  { value: "Professional Degree", label: "Professional Degree", iconKey: "star" },
-  { value: "Certificate", label: "Certificate", iconKey: "sparkles" }
-];
-
-export function searchUniversities(query: string): UniversityEntry[] {
-  if (!query.trim()) return UNIVERSITIES;
-  const q = query.toLowerCase();
-  return UNIVERSITIES.filter(
-    (u) => u.name.toLowerCase().includes(q) || u.country.toLowerCase().includes(q)
-  );
-}
-
-export function getUniversityCountry(universityName: string): string {
-  const found = UNIVERSITIES.find((u) => u.name.toLowerCase() === universityName.toLowerCase());
-  return found ? found.country : "Global";
-}
