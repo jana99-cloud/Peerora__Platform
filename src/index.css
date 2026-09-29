@@ -7,7 +7,8 @@
 
 @layer base {
   body {
-    @apply font-body text-navy-500;
+    font-family: 'Belanosima', sans-serif;
+    color: #1E2A4A;
     background-color: #FFFDFC;
     background-image:
       linear-gradient(rgba(240, 162, 98, 0.2) 1px, transparent 1px),
@@ -15,12 +16,16 @@
     background-size: 32px 32px;
     background-position: 0 0;
   }
-  h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
-  }
-  h1, h2 {
-    font-family: 'Cal Sans', sans-serif;
+
+  /* العناوين الكبرى مثل Available activities */
+  h1, h2, h3, .font-display {
+    font-family: 'Cal Sans', sans-serif !important;
     letter-spacing: -0.025em;
+  }
+
+  /* النصوص العادية والهيدر وكروت البوستات */
+  p, span, a, li, input, button, .post-card-text {
+    font-family: 'Belanosima', sans-serif !important;
   }
 }
 
