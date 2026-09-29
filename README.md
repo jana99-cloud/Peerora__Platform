@@ -14,6 +14,5 @@ Follow these steps to set up and run the project locally:
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/jana99-cloud/Peerora__Platform.git](https://github.com/jana99-cloud/Peerora__Platform.git)
-   cd Peerora__Platform
+git clone https://github.com/jana99-cloud/Peerora__Platform.git
 ](https://peerora-duplicated-mfgv.bolt.host)
