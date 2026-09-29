@@ -1,4 +1,4 @@
-# Peerora Platform (GIBC V2 Hackathon)
+[# Peerora Platform (GIBC V2 Hackathon)
 
 Peerora is a collaborative Saudi platform connecting students and researchers with the right collaborators across majors and countries. It makes academic teamwork global, structured, and verifiable—helping ideas find the skills they need and turning collaboration into real impact.
 
@@ -16,3 +16,4 @@ Follow these steps to set up and run the project locally:
    ```bash
    git clone [https://github.com/jana99-cloud/Peerora__Platform.git](https://github.com/jana99-cloud/Peerora__Platform.git)
    cd Peerora__Platform
+](https://peerora-duplicated-mfgv.bolt.host)
