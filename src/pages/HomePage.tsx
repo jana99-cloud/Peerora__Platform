@@ -148,12 +148,12 @@ export function HomePage() {
           <AboutUsSection />
         </div>
 
-        {/* 🌟 حقوق الموقع ومعلومات التواصل المحدثة */}
+        {/* 🌟 حقوق الموقع والمعلومات مع إيميل بلون وردي */}
         <div className="mt-8 mb-4 text-center">
           <p className="text-xs sm:text-sm font-medium text-navy-400 leading-relaxed">
             Created by PEERORA Team — 2026©
             <br />
-            Contact: <a href="mailto:Peerora.support@gmail.com" className="underline hover:text-navy-600 transition-colors">Peerora.support@gmail.com</a>
+            Contact: <a href="mailto:Peerora.support@gmail.com" className="text-fuchsia-500 hover:text-fuchsia-600 underline transition-colors">Peerora.support@gmail.com</a>
           </p>
         </div>
       </main>
