@@ -435,7 +435,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const [editEmail, setEditEmail] = useState(student.email || '');
   const [editUsername, setEditUsername] = useState(student.username || '');
   
-  // حفظ التخصص والجامعة في حالتي البحث والعرض مباشرة
   const [majorSearch, setMajorSearch] = useState(student.major || '');
   const [showMajorDropdown, setShowMajorDropdown] = useState(false);
 
@@ -512,17 +511,14 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       interests: interestsList,
     };
 
-    // 1. تحديث الـ Context إذا وُجدت الدالة
     if (updateProfile) {
       updateProfile(updatedData);
     }
 
-    // 2. تحديث الـ currentUser مباشرة في الذاكرة لضمان ثباتها الفوري
     if (currentUser && currentUser.id === student.id) {
       Object.assign(currentUser, updatedData);
     }
 
-    // 3. الحفظ في localStorage لضمان عدم الضياع نهائياً
     try {
       const storedUsers = JSON.parse(localStorage.getItem('peerora_students') || '[]');
       const updatedStudents = storedUsers.map((s: any) => 
@@ -860,31 +856,6 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
             </div>
 
           </div>
-
-          {/* Account Management & Log Out */}
-          {isMe && (
-            <div className="border-t border-cream-200 pt-6 space-y-3">
-              <h3 className="font-display text-sm font-bold text-navy-500">Account Management</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                <PillButton variant="navy" className="w-full" onClick={() => navigate({ name: 'privacy' })}>
-                  <Shield size={16} /> Privacy Settings
-                </PillButton>
-                
-                <PillButton 
-                  variant="red" 
-                  className="w-full" 
-                  onClick={() => {
-                    localStorage.clear();
-                    sessionStorage.clear();
-                    window.location.href = window.location.origin;
-                  }}
-                >
-                  <LogOut size={16} /> Log Out
-                </PillButton>
-              </div>
-            </div>
-          )}
-
         </div>
       </div>
     </PageShell>
